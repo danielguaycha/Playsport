@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\PlayerTeam;
 use App\Sport;
+use App\TeamGroup;
 use App\Tournament;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -85,7 +86,7 @@ class TeamController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|unique:teams|max:100',
+            'name' => 'required|max:100',
             'type' => 'required',
             'sport'=> 'required'
         ]);
@@ -95,9 +96,11 @@ class TeamController extends Controller
         $team -> name = $request->get('name');
         $team -> type = $request->get('type');
         $team -> organization_id = Auth::user()->organization_id;
-        $team -> logo = "logo.png";
+        $team -> logo = $request->get('logo');
         $team->alias = $request->get("alias");
         $team -> sport_id = $request->get('sport');
+        $team->status = 1;
+
 
         $team-> save();
         session()->flash("success", "Equipo guardado con exito");
@@ -146,6 +149,7 @@ class TeamController extends Controller
         $t->alias = $request->alias;
         $t->type = $request->type;
         $t->sport_id = $request->sport;
+        $t-> logo = $request->get('logo');
 
         $t->save();
         session()->flash("success", "Datos actualizados con exito");
@@ -157,10 +161,20 @@ class TeamController extends Controller
     {
         $t = Team::find($id);
         if (count($t)>0){
-            $t->status = 0;
-            $t->save();
-            session()->flash('success', "Equipo eliminado correctamente");
-            return back();
+
+            $pt = PlayerTeam::where('team_id', $id)->get();
+            $tg = TeamGroup::where("team_id", $id)->get();
+
+            if (count($pt)>0 || count($tg)>0) {
+                $t->status = 0;
+                $t->save();
+                session()->flash('info', "Este equipo tiene jugadores o grupos asignados, se ha cambiado el estado!");
+                return back();
+            }else{
+                $t->delete();
+                session()->flash("success", "Equipo eliminado con exito");
+                return back();
+            }
         }
         abort(404);
     }

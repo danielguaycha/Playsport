@@ -59,7 +59,16 @@
                 <tr>
                     <td> {{$team -> id}} </td>
                     <td class="d-none d-md-block">
-                        <img src="{{asset('img/logo.png')}}" alt="logo" width="30px">
+                            @if($team->type == 'Male')
+                                <img src="{{ Avatar::create($team->alias)
+                                                    ->setBorder(5, $team->logo)
+                                                    ->setBackground($team->logo)->toBase64() }}" width="30px"/>
+                            @else
+                                <img src="{{ Avatar::create($team->alias)
+                                                ->setBorder(5, "#C2185B")
+                                                ->setBackground($team->logo)->toBase64() }}" width="30px"/>
+                            @endif
+                        {{--<img src="{{asset('img/logo.png')}}" alt="logo" width="30px">--}}
                     </td>
                     <td> {{$team -> type}} </td>
                     <td> {{$team -> name}} </td>

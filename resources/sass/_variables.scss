@@ -3,7 +3,10 @@
 $body-bg: #f8fafc;
 
 // Typography
-$font-family-sans-serif: "Nunito", sans-serif;
+// $font-family-sans-serif: "Nunito", sans-serif;
+// $font-family: 'Raleway', sans-serif;
+$font-family: "Nunito", sans-serif;
+$font-normal-size: 1rem;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
 
@@ -18,3 +21,14 @@ $yellow: #ffed4a;
 $green: #38c172;
 $teal: #4dc0b5;
 $cyan: #6cb2eb;
+
+$primary: #00466f;
+$secundary: #256298;
+$terciario: #0C2032;
+$dark: #24292e;
+$gris: #cecece;
+
+// Medidas
+$movil: 575.98px;
+$tablet: 767.98px;
+$desktop: 991.98px;

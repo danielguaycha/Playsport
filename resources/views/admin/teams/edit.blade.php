@@ -40,6 +40,13 @@
                 </select>
             </div>
 
+            <div class="form-group">
+                <label for="">Color</label>
+                <input type="color" class="form-control"
+                       value="{{ old( 'logo', $team->logo) }}"
+                       name="logo" placeholder="Formato: #00000">
+            </div>
+
 
             <div class="form-group">
                 <label for="">Seleccione Deporte</label>

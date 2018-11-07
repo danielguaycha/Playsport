@@ -135,46 +135,23 @@ class TimeTableController extends Controller
         return back();
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function edit($id, Request $request)
     {
-        //
+        if ($request->query('group_id')){
+           return $this->edit_group($id, $request->query('group_id'));
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $tt = TimeTable::find($id);
@@ -183,6 +160,22 @@ class TimeTableController extends Controller
             $tt->delete();
             return back();
         }
+    }
+
+    private function edit_stage($id, $request){
+
+    }
+
+    private function edit_group($id, $group_id){
+        $tt = TimeTable::join('groups', 'groups.id', 'time_tables.group_id')
+            ->where([
+            ['id', $id],
+            ['group_id', $group_id]
+        ])
+            ->select('time_tables.*')
+            ->first();
+        if (count($tt)==0) abort(404);
+        return view('admin.timetable.edit.group', ['timetable'=> $tt]);
     }
 
     private function process_group($tournament, $group){

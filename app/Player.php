@@ -13,6 +13,8 @@ class Player extends Model
         'age',
         'dni',
         'type',
-        'observations'
+        'observations',
+        'number',
+        'organization_id'
     ];
 }

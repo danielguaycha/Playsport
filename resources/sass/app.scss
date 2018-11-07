@@ -4,9 +4,12 @@
 
 // Variables
 @import 'variables';
-
+@import 'mixins';
+@import "normalize";
 // Bootstrap
+@import "home";
 @import "admin";
+@import "markdown";
 
 .navbar-laravel {
   background-color: #fff;

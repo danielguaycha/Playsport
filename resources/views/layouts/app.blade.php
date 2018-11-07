@@ -66,6 +66,9 @@
                                 <a href="{{ route("team.index") }}" class="nav-link">Equipos/Jugadores</a>
                             </li>
 
+                            <li class="nav-item">
+                                <a href="{{ route('page.index') }}" class="nav-link">Paginas</a>
+                            </li>
                             {{--<li class="nav-item">
                                 <a href="{{ route('player.index') }}" class="nav-link">Jugadores</a>
                             </li>--}}
@@ -126,7 +129,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-4" style="top: 0;">
             @yield('content')
         </main>
     </div>

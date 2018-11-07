@@ -21,7 +21,7 @@ class CreateTeamsTable extends Migration
             $table->string("logo", 100);
             $table->integer("organization_id")->unsigned();
             $table->integer("sport_id")->unsigned();
-            $table->integer('status', 1)->default(0);
+            $table->integer('status')->default(0);
             $table->foreign('organization_id')->references('id')->on('organizations');
             $table->foreign('sport_id')->references('id')->on('sports');
 

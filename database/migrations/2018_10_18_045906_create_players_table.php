@@ -6,11 +6,6 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreatePlayersTable extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
     public function up()
     {
         Schema::create('players', function (Blueprint $table) {
@@ -20,16 +15,14 @@ class CreatePlayersTable extends Migration
             $table->integer("age")->default(0);
             $table->string("dni", 20);
             $table->enum("type", ["Male", "Female"]);
+            $table->integer('number')->default(0);
             $table->string("observations", 250)->nullable();
             $table->timestamps();
+
+            $table->integer('organization_id')->unsigned()->nullable();
+            $table->foreign("organization_id")->references("id")->on("organizations");
         });
     }
-
-    /**
-     * Reverse the migrations.
-     *
-     * @return void
-     */
     public function down()
     {
         Schema::dropIfExists('players');

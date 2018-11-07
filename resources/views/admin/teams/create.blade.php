@@ -35,6 +35,11 @@
                 </select>
             </div>
 
+            <div class="form-group">
+                <label for="">Color</label>
+                <input type="color" class="form-control" name="logo" value="#00466f">
+            </div>
+
 
             <div class="form-group">
                 <label for="">Seleccione Deporte</label>

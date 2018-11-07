@@ -23,8 +23,7 @@
                     <label>Apellido</label>
                     <input type="text"
                            name="last_name"
-
-                           value="{{ $player->last_name }}"
+                           value="{{ old('last_name',$player->last_name) }}"
                            maxlength="100"
                            placeholder="Ingrese Apellido"
                            class="form-control">
@@ -52,17 +51,27 @@
                            class="form-control">
                 </div>
             </div>
-            <div class="form-group">
-                <label>Genero</label>
-                <select name="type" class="form-control" required>
-                    @if($player->type == 'Female')
-                        <option value="Male">Masculino</option>
-                        <option value="Female" selected>Femenino</option>
-                    @else
-                        <option value="Male" selected>Masculino</option>
-                        <option value="Female">Femenino</option>
-                    @endif
-                </select>
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label>Género</label>
+                    <select name="type" class="form-control" required>
+                        @if($player->type == 'Female')
+                            <option value="Male">Masculino</option>
+                            <option value="Female" selected>Femenino</option>
+                        @else
+                            <option value="Male" selected>Masculino</option>
+                            <option value="Female">Femenino</option>
+                        @endif
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label>Número de Camiseta</label>
+                    <input type="number"
+                           required
+                           name="number"
+                           class="form-control"
+                           placeholder="Ingrese el numero de camiseta" value="{{ old('number', $player->number) }}">
+                </div>
             </div>
             <div class="form-group">
                 <label>Observaciones</label>

@@ -13,6 +13,6 @@ $factory->define(Tournament::class, function (Faker $faker) {
         'status'=> $faker->numberBetween(0, 1),
         'rules'=> $faker->text,
         'sports_id' => $faker->numberBetween(1, 3),
-        'organizations_id'=> $faker->numberBetween(1, 2)
+        'organizations_id'=>1
     ];
 });

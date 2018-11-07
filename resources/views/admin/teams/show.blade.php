@@ -17,8 +17,9 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
+
                     @foreach($players as $p)
+                        <tr>
                         <td>1</td>
                         <td scope="row">{{$p->name}} {{$p->last_name}}</td>
                         <td>{{$p->type}}</td>
@@ -32,8 +33,8 @@
                             </form>
                             <a href="{{route("player.edit", ['id'=> $p->id])}}" class="btn btn-outline-info btn-sm"><i class="fa fa-pen"></i></a>
                         </td>
+                        </tr>
                     @endforeach
-                </tr>
                 </tbody>
             </table>
         </div>
