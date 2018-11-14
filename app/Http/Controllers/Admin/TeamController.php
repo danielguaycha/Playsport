@@ -80,7 +80,8 @@ class TeamController extends Controller
     public function create()
     {
         $sport = Sport::all();
-        return view('admin.teams.create')->with(['sports' => $sport]);
+        $t = Team::select('logo', 'alias')->distinct('alias')->get();
+        return view('admin.teams.create')->with(['sports' => $sport, 'colors'=> $t]);
     }
 
     public function store(Request $request)
@@ -105,7 +106,7 @@ class TeamController extends Controller
         $team-> save();
         session()->flash("success", "Equipo guardado con exito");
 
-        return redirect()->route('team.index');
+        return back();
     }
 
     public function show($id)
@@ -126,9 +127,10 @@ class TeamController extends Controller
     public function edit($id)
     {
         $t = Team::find($id);
+        $colors = Team::select('logo', 'alias')->distinct('alias')->get();
         $sports = Sport::all();
         if (count($t)>0) {
-            return view('admin.teams.edit', ['team'=> $t, 'sports'=> $sports]);
+            return view('admin.teams.edit', ['team'=> $t, 'sports'=> $sports, 'colors'=> $colors]);
         }
 
         abort(404);
@@ -153,7 +155,7 @@ class TeamController extends Controller
 
         $t->save();
         session()->flash("success", "Datos actualizados con exito");
-        return redirect(route('team.index'));
+        return back();
     }
 
 

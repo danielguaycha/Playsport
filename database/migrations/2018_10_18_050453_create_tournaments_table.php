@@ -20,6 +20,7 @@ class CreateTournamentsTable extends Migration
             $table->date("date_end");
             $table->enum("type", ["Male", "Female"]);
             $table->string("logo", 100);
+            $table->string("url", 100)->nullable();
             $table->integer("status")->default(1);
             $table->longText("rules");
 

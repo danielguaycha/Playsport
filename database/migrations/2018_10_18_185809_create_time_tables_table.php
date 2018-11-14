@@ -18,7 +18,7 @@ class CreateTimeTablesTable extends Migration
             $table->date("date");
             $table->time("hour");
             $table->string("place", 255);
-            $table->integer("status")->default(0);
+            $table->integer("status")->default(-1);
 
             $table->integer("team_id_a")->unsigned();
             $table->integer("team_id_b")->unsigned();

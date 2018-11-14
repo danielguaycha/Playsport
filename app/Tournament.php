@@ -12,6 +12,7 @@ class Tournament extends Model
         'date_end',
         'type',
         'logo',
+        'url',
         'status',
         'rules',
         'sports_id',

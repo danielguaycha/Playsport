@@ -8,17 +8,21 @@
         @foreach( $groups as $g)
             <div class="group-content">
                 <div class="group-title">{{ $g->name }}</div>
-                <table class="table table-hover">
+                <div class="table-responsive">
+                    <table class="table table-hover">
                     <tbody>
                     <tr class="table-row-title">
                         <th colspan="2" class="text-left">Equipo</th>
                         <th>PJ</th>
-                        <th>GF</th>
-                        <th>GC</th>
                         <th>PG</th>
                         <th>PP</th>
                         <th>PE</th>
-                        <th>Pts</th>
+                        <th>{{ substr($tournament->denomination, 0 ,1) }}F</th>
+                        <th>{{ substr($tournament->denomination, 0 ,1) }}C</th>
+                        <th>{{ substr($tournament->denomination, 0 ,1) }}D</th>
+                        @if($tournament->sports_id == 1 || $tournament->sports_id == 4 || $tournament->sports_id == 3)
+                            <th>PTS</th>
+                        @endif
                     </tr>
                     @php
                         $i = 1;
@@ -45,13 +49,20 @@
                                     @endif
                                     <span class="movil-hide">{{ $t->name }}</span>
                                 </td>
+
                                 <td class="text-center" width="4%">{{$t->pj}}</td>
-                                <td class="text-center" width="4%">{{ $t->gf }}</td>
-                                <td class="text-center" width="4%">{{ $t->gc }}</td>
                                 <td class="text-center" width="4%">{{ $t->pg }}</td>
                                 <td class="text-center" width="4%">{{ $t->pp }}</td>
                                 <td class="text-center" width="4%">{{ $t->pe }}</td>
-                                <td class="text-center" width="4%">{{ $t->pts }}</td>
+
+                                <td class="text-center" width="4%">{{ $t->gf }}</td>
+                                <td class="text-center" width="4%">{{ $t->gc }}</td>
+                                <td class="text-center" width="4%">{{ $t->gd }}</td>
+
+                                @if($tournament->sports_id == 1 ||
+                                    $tournament->sports_id == 4 || $tournament->sports_id == 3)
+                                    <td class="text-center" width="4%">{{ $t->pts }}</td>
+                                @endif
                             </tr>
                             @php
                                 $i++;
@@ -60,6 +71,7 @@
                     @endforeach
                     </tbody>
                 </table>
+                </div>
             </div>
         @endforeach
     </main>

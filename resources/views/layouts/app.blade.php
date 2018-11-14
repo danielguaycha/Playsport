@@ -12,6 +12,12 @@
     <!-- Scripts -->
     {{--<script src="{{ asset('js/app.js') }}" defer></script>--}}
 
+<!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#24292e">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#24292e">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#24292e">
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
@@ -20,7 +26,53 @@
     <link rel="stylesheet" href="{{asset("css/all.min.css")}}">
 
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{--<link href="{{ asset('css/app.css') }}" rel="stylesheet">--}}
+    <style>
+        .sp-title {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: column;
+            align-items: center;
+        }
+        .sp-title div {
+            display: flex;
+            flex-direction: column;
+            align-items: initial;
+            margin-bottom: 1rem;
+        }
+        .sp-title div a {
+            margin-right: 1rem;
+            min-width: 3rem;
+        }
+        .sp-title div form {
+            margin-top: 1rem;
+        }
+        .sp-title div form button {
+            margin: 0 auto;
+        }
+        @media screen and (min-width: 768px) {
+            .sp-title {
+                flex-direction: row;
+                align-items: baseline;
+            }
+            .sp-title div {
+                align-items: baseline;
+                flex-direction: row;
+                margin-bottom: 0;
+            }
+        }
+
+        .sp-arrows {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: 100%;
+            align-items: center;
+        }
+        .sp-arrows button:nth-child(1) {
+            margin-bottom: 1rem;
+        }
+    </style>
     @yield('style')
 </head>
 <body>

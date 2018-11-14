@@ -61,31 +61,24 @@ class TimeTableController extends Controller
                 ['status', 1],
                 ['organizations_id', Auth::user()->organization_id]
             ])->get();
+
             return view("admin.timetable.create", [
-                'tournaments' => $t
+                'tournaments' => $t,
+                //'stages'=> $t;
             ]);
         }
         else {
             $t = Tournament::find($request->query('tournament'));
 
             // steep two - Groups - if have any group then show this
-            if (!$request->query('group')){
+            if (!$request->query('group') && !$request->query('stage')){
                 $group = Group::where('tournament_id', $t->id)->get();
-                if (count($group) > 0) {
-                    return view("admin.timetable.create", [
-                        'tournament' => $t,
-                        'groups' => $group
-                    ]);
-                }
-            }
-
-            // steep two - Stages - if have any stage then show this
-            if (!$request->query('stage')){
                 $stages = Stage::where("tournament_id", $t->id)->get();
-                if (count($stages)>0){
+                if (count($group) > 0 || count($stages)>0) {
                     return view("admin.timetable.create", [
                         'tournament' => $t,
-                        'stages' => $stages
+                        'groups' => $group,
+                        'stages'=> $stages
                     ]);
                 }
             }
@@ -132,6 +125,46 @@ class TimeTableController extends Controller
             ));
         $tt->save();
 
+        return back();
+    }
+
+    public function store_stage(Request $request){
+
+        $tt_num = TimeTable::where('stage_id', $request->get('stage_id'))->get();
+        if(count($tt_num) >= $request->get('num')){
+            session()->flash("warning", "Ya has agregado dos encuentros");
+            return back();
+        }
+
+        $ta = new Team();
+        $ta->name = $request->get('team_a');
+        $ta->alias = $request->get("team_a");
+        $ta->type = $request->get('type');
+        $ta->logo = '#256298';
+        $ta->organization_id = Auth::user()->organization_id;
+        $ta->sport_id = $request->get("sport_id");
+
+        $tb = new Team();
+        $tb->name = $request->get('team_b');
+        $tb->alias = $request->get("team_b");
+        $tb->type = $request->get('type');
+        $tb->logo = '#256298';
+        $tb->organization_id = Auth::user()->organization_id;
+        $tb->sport_id = $request->get("sport_id");
+
+        $ta->save();
+        $tb->save();
+
+        $tt = new TimeTable();
+        $tt->date = $request->get('date');
+        $tt->hour = $request->get('hour');
+        $tt->place = $request->get('place');
+        $tt->team_id_a = $ta->id;
+        $tt->team_id_b = $tb->id;
+        $tt->stage_id = $request->get("stage_id");
+        $tt->save();
+
+        session()->flash("success", "Calendario guardado con exito");
         return back();
     }
 
@@ -199,11 +232,15 @@ class TimeTableController extends Controller
     }
 
     private function process_stage($tournament, $stage){
-
+        $tt = TimeTable::join('teams as a', 'a.id', 'time_tables.team_id_a')
+            ->join('teams as b', 'b.id', 'time_tables.team_id_b')
+            ->select('a.name as team_a', 'b.name as team_b', 'time_tables.*')
+            ->where("stage_id", $stage->id)->get();
 
         return view("admin.timetable.stage", [
             'tournament' => $tournament,
-            'stage' => $stage
+            'stage' => $stage,
+            'timeTables'=> $tt
         ]);
     }
 }

@@ -44,7 +44,7 @@
                 <label for="">Color</label>
                 <input type="color" class="form-control"
                        value="{{ old( 'logo', $team->logo) }}"
-                       name="logo" placeholder="Formato: #00000">
+                       name="logo" placeholder="Formato: #00000" id="color">
             </div>
 
 
@@ -52,20 +52,23 @@
                 <label for="">Seleccione Deporte</label>
                 <select name="sport" required class="form-control">
                     @foreach($sports as $sport)
-                        @if(old('sport'))
-                            @if(old('sport')== $sport->id)
+                            @if(old('sport')== $sport->id || $team->sport_id == $sport->id)
                                 <option value="{{$sport -> id}}" selected> {{$sport -> name}}</option>
                             @else
                                 <option value="{{$sport -> id}}"> {{$sport -> name}}</option>
                             @endif
-                        @else
-                            <option value="{{$sport -> id}}"> {{$sport -> name}}</option>
-                        @endif
                     @endforeach
                 </select>
             </div>
 
-
+            <div class="form-group form-inline">
+                @foreach($colors as $c)
+                    <button type="button"
+                            onclick="colors('{{$c->logo}}')"
+                            class="btn btn-sm"
+                            style="margin: 1rem; background: {{ $c->logo }}; color: #fff">{{ $c->alias }}-{{ $c->logo }}</button>
+                @endforeach
+            </div>
 
             <div class="form-group">
                 <button type="submit" class="btn btn-success">Guardar</button>
@@ -73,4 +76,12 @@
 
         </form>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        function colors(valor){
+            document.getElementById('color').value = valor;
+        }
+    </script>
 @endsection

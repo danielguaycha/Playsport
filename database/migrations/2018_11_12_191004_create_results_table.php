@@ -15,8 +15,13 @@ class CreateResultsTable extends Migration
     {
         Schema::create('results', function (Blueprint $table) {
             $table->increments('id');
-            $table->string("result", 20)->default("0;0");
-            $table->string("penalties", 20)->nullable();
+
+            $table->integer("result_a")->default(0);
+            $table->integer("result_b")->default(0);
+
+            $table->integer("penal_a")->default(0);
+            $table->integer("penal_b")->default(0);
+
             $table->string("others_points", 20)->nullable();
             $table->string("desc", 250)->nullable();
 

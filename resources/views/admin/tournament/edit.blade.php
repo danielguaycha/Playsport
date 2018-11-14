@@ -9,12 +9,21 @@
             {{csrf_field()}}
             {{method_field("PUT")}}
             {{--Nombre--}}
-            <div class="form-group">
-                <label>Nombre</label>
-                <input type="text"
-                       value="{{old('name', $tournament->name )}}"
-                       class="form-control"
-                       name="name" required placeholder="Ingrese nombre" maxlength="100">
+            <div class="form-group row">
+                <div class="col-md-6">
+                    <label>Nombre</label>
+                    <input type="text"
+                           value="{{old('name', $tournament->name )}}"
+                           class="form-control"
+                           name="name" required placeholder="Ingrese nombre" maxlength="100">
+                </div>
+                <div class="col-md-6">
+                    <label>Url</label>
+                    <input type="text"
+                           value="{{old('url', $tournament->url )}}"
+                           class="form-control"
+                           name="url" required placeholder="Url de acceso" maxlength="100">
+                </div>
             </div>
             {{--Fechas--}}
             <div class="form-group row">
@@ -40,15 +49,24 @@
                 <div class="col-md-6">
                     <label>Género</label>
                     <select class="form-control" name="type" required>
-                        <option value="male">Masculino</option>
-                        <option value="female">Femenino</option>
+                        @if(old('type')=='Male' || $tournament->type == 'Male')
+                            <option value="male" selected>Masculino</option>
+                            <option value="female">Femenino</option>
+                        @else
+                            <option value="male">Masculino</option>
+                            <option value="female" selected>Femenino</option>
+                        @endif
                     </select>
                 </div>
                 <div class="col-md-6">
                     <label>Deporte</label>
                     <select class="form-control" name="sport_id" required>
                         @foreach($sports as $sport)
-                            <option value="{{$sport -> id}}"> {{$sport -> name}}</option>
+                            @if($sport->id == old('sport_id') || $tournament->sports_id == $sport->id)
+                                <option value="{{$sport -> id}}" selected> {{$sport -> name}}</option>
+                            @else
+                                <option value="{{$sport -> id}}"> {{$sport -> name}}</option>
+                            @endif
                         @endforeach
                     </select>
                 </div>

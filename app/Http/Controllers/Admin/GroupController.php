@@ -82,9 +82,9 @@ class GroupController extends Controller
             return redirect(route("group.create", ['tournament'=> $request->tournament_id]));
         }
 
-        if (count($request->get("to_team"))<=2)
+        if (count($request->get("to_team"))<=1)
         {
-            session()->flash('warning', 'Necesitas escoger minimo 3 equipos para crear un grupo!');
+            session()->flash('warning', 'Necesitas escoger minimo 2 equipos para crear un grupo!');
             return redirect(route("group.create", ['tournament'=> $request->tournament_id]));
         }
 

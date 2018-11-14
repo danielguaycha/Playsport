@@ -7,14 +7,10 @@ use App\Tournament;
 use App\Sport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class TournamentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         $t = Tournament::join('sports', 'tournaments.sports_id', 'sports.id')
@@ -28,16 +24,10 @@ class TournamentController extends Controller
         return view('admin.tournament.index',['tournaments'=> $t]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $sport = Sport::all();
         return view('admin.tournament.create')->with(['sports' => $sport]);
-        //return view('admin.tournament.create');
     }
 
     /**
@@ -61,6 +51,7 @@ class TournamentController extends Controller
         $tournament -> date_end = $request->get('date_end');
         $tournament -> type = $request->get('type');
         $tournament -> logo = "logo.png";
+        $tournament -> url = Str::slug($tournament->name);
         $tournament -> status = 1;
         $tournament -> rules = "rules";
         $tournament -> sports_id = $request->get('sport');
@@ -112,6 +103,7 @@ class TournamentController extends Controller
             $t->date_init = $request->date_init;
             $t->date_end = $request->date_end;
             $t->type = $request->type;
+            $t-> url = Str::slug($request->url);
             $t->sports_id = $request->sport_id;
             $t->rules = $request->rules;
 

@@ -4,7 +4,10 @@ Route::get('/', function () {
     return view('guest.home.index');
 });
 
-Auth::routes();
+//Auth::routes();
+Route::get('dt-login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('dt-login', 'Auth\LoginController@login');
+Route::post('dt-logout', 'Auth\LoginController@logout')->name('logout');
 
 Route::get('/home', 'HomeController@index')->name('home');
 
@@ -28,24 +31,38 @@ Route::prefix('admin')->namespace('Admin')->group(function () {
 
     //Stages
     Route::resource('stage', 'StageController');
+    Route::get('stage/result/{stage}', 'StageController@result')->name('stage.result');
+    Route::get('stage/change/result', 'StageController@change_result')->name('stage.change');
 
     //TimeTable
     Route::resource('timetable', 'TimeTableController');
+    Route::post('timetable/stage', 'TimeTableController@store_stage')->name('timetable.store.stage');
+
+    //Results
+    Route::get('/result/{id}/edit', 'ResultController@edit')->name('result.edit');
+    Route::post('/result', 'ResultController@store_result')->name('result.store');
+    Route::post('/result/stats', 'ResultController@store_stats')->name('result.store.stats');
+    Route::delete('/result/stats/{id}', 'ResultController@destroy_stats')->name('result.destroy.stats');
+    Route::post('/result/status/{id}', 'ResultController@update_status')->name('result.update.status');
 });
 
 
-Route::redirect('futbol', 'torneo/1/fechas');
-Route::redirect('futsal', 'torneo/2/fechas');
+Route::redirect('futbol', 'futbol/fechas');
+Route::redirect('futsal', 'futsal/fechas');
+Route::redirect('basket-f', 'basket-f/fechas');
+Route::redirect('basket-m', 'basket-m/fechas');
+Route::redirect('volley', 'volley/fechas');
 
 
 Route::namespace('Guest')->group(function (){
     // paginas
     //Route::post('/page', "PageController@store");
     // torneos
-    Route::get('/torneo/{id}/grupos', 'TorneoController@show_groups')->name('torneo.grupos');
-    Route::get('/torneo/{id}/top', 'TorneoController@show_top')->name('torneo.stats');
-    Route::get('/torneo/{id}/fechas', 'TorneoController@show_times')->name('torneo.times');
-    Route::get('/torneo/{id}/{page}', 'TorneoController@show_page')->name('torneo.page');
+    Route::get('{url}/resultados', 'TorneoController@show_groups')->name('torneo.grupos');
+    Route::get('{url}/stats', 'TorneoController@show_top')->name('torneo.stats');
+    Route::get('{url}/fechas', 'TorneoController@show_times')->name('torneo.times');
+    Route::get('{url}/final', 'TorneoController@show_stage')->name('torneo.final');
+    Route::get('{url}/{page}', 'TorneoController@show_page')->name('torneo.page');
 
     Route::get('/{title}', 'PageController@show_page');
 });

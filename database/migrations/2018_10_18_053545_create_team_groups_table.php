@@ -14,7 +14,7 @@ class CreateTeamGroupsTable extends Migration
     public function up()
     {
         Schema::create('team_groups', function (Blueprint $table) {
-
+            $table->increments('id');
             $table->integer("pj")->default(0);
             $table->integer("gf")->default(0);
             $table->integer("gc")->default(0);

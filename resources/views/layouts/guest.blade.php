@@ -8,6 +8,12 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/all.min.css')}}">
     <link rel="stylesheet" href="{{asset("css/app.css")}}">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#24292e">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#24292e">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#24292e">
 </head>
 <body>
 
@@ -18,8 +24,6 @@
     </div>
     <nav class="menu-main">
         <ul class="menu">
-            <li><a href="{{ url('evento') }}">Evento</a></li>
-            <li><a href="{{ url('concursos') }}">Concursos</a></li>
             <li><a href="{{ url('premios') }}">Premios</a></li>
             <li><a href="{{ url('reglas') }}">Reglas</a></li>
 

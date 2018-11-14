@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Group;
 use App\Sport;
 use App\Stage;
+use App\StageControl;
 use App\Team;
+use App\TimeTable;
 use App\Tournament;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -13,30 +15,95 @@ use Illuminate\Support\Facades\Auth;
 
 class StageController extends Controller
 {
-    /**
-     * StageController constructor.
-     */
+
+    public function result($stage){
+        $s = Stage::join('time_tables as tt', 'stages.id', 'tt.stage_id')
+            ->join('teams as a', 'a.id', 'tt.team_id_a')
+            ->join('teams as b', 'b.id', 'tt.team_id_b')
+            ->select('tt.*','stages.name as stage', 'stages.parent', 'stages.id as stage_id', 'stages.tournament_id',
+                'a.name as team_a', 'a.alias as alias_a', 'a.type as type_a', 'a.logo as logo_a',
+                'b.name as team_b', 'b.alias as alias_b', 'b.type as type_b', 'b.logo as logo_b')
+            ->where('stages.id', $stage)
+            ->get();
+
+        $g = Group::where('tournament_id', $s[0]->tournament_id)->get();
+
+        $stats = Group::join('team_groups','team_groups.group_id', 'groups.id')
+            ->join('teams', 'teams.id', 'team_groups.team_id')
+            ->select('teams.name as team', 'teams.id as team_id','groups.id as group_id','team_groups.*')
+            ->selectRaw('team_groups.gf - team_groups.gc as gd')
+            ->where('groups.tournament_id', $s[0]->tournament_id)
+            ->orderBy('team_groups.pts', 'desc')
+            ->orderBy('gd', 'desc')
+            ->get();
+
+        return view('admin.stages.edit', [
+            'stage'=> $s,
+            'groups'=> $g,
+            'stats'=> $stats
+        ]);
+    }
+
+    public function change_result(Request $request){
+        //dd($request);
+        $tt = TimeTable::find($request->time_table_id);
+        if (count($tt)==0) abort(404);
+        switch ($request->btn_set){
+            case 'revert_one':
+                $sc = StageControl::where([
+                    ['time_table_id', $tt->id],
+                    ['team', $request->team]
+                ])->orderBy('id', 'desc')->first();
+
+                if (count($sc)>0) {
+                    if ($request->team == 'team_a') {
+                        $tt->team_id_a = $sc->team_old;
+                    } elseif ($request->team == 'team_b') {
+                        $tt->team_id_b = $sc->team_old;
+                    }
+                    $tt->save();
+                    $sc->delete();
+                    session()->flash("info", "Cambios revertidos");
+                }else{
+                    session()->flash("warning", "No hay cambios revertidos");
+                }
+                break;
+            case 'revert_all':
+
+                break;
+            case 'update':
+                $sc = new StageControl();
+                $sc->team_old = $request->team_old;
+                $sc->team_new = $request->team_new;
+                $sc->time_table_id = $request->time_table_id;
+                $sc->team = $request->team;
+                $sc->save();
+
+                if ($request->team == 'team_a'){
+                    $tt->team_id_a = $request->team_new;
+                }elseif ($request->team == 'team_b'){
+                    $tt->team_id_b = $request->team_new;
+                }
+
+                $tt->save();
+
+                session()->flash("success", "Actualizado con exito");
+
+                break;
+        }
+        return back();
+    }
+
     public function __construct()
     {
         $this->middleware("auth");
     }
 
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         if(!$request->query('tournament')) {
@@ -54,11 +121,11 @@ class StageController extends Controller
             if (count($t)<=0)
                 abort(404);
 
-            $g = Group::where("tournament_id", $t->id)->get();
+            /*$g = Group::where("tournament_id", $t->id)->get();
             if (count($g)>0){
                 session()->flash("info", "Existen grupos creados para este torneo");
                 return back();
-            }
+            }*/
 
             $sport = Sport::find($t->sports_id);
             $teams = Team::where([
@@ -77,12 +144,6 @@ class StageController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         if (!$request->has("name") || !$request->has("tournament_id") || !$request->has("match_num")){
@@ -105,12 +166,6 @@ class StageController extends Controller
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
@@ -124,7 +179,6 @@ class StageController extends Controller
      */
     public function edit($id)
     {
-        //
     }
 
     /**

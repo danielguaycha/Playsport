@@ -18,7 +18,7 @@ class CreateStagesTable extends Migration
             $table->string("name", 100);
             $table->integer("match_num")->default(0);
             $table->string("desc", 255)->nullable();
-            $table->integer("status")->default(1);
+            $table->integer("status")->default(-1);
             $table->integer("tournament_id")->unsigned();
             $table->integer("parent")->default(0);
             $table->foreign("tournament_id")->references("id")->on('tournaments');

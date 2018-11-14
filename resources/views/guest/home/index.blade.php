@@ -69,7 +69,7 @@
             <div class="col-md-3 col-sm-6">
                 <div class="sport-widget">
                     <div class="sport-widget-main">
-                        <a href="{{ url('ecuavolley') }}">
+                        <a href="{{ url('volley') }}">
                             <div class="sport-widget-img">
                                 <img src="{{asset("img/home/volley.png")}}" alt="Futbol">
                             </div>

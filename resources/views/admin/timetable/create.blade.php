@@ -28,9 +28,10 @@
             </form>
 
         @else
+            <h5><span class="text-info">Torneo: </span>{{ $tournament->name }}</h5>
             @if(isset($groups) && !request()->query('group'))
                 <form action="">
-                    <h5><span class="text-info">Torneo: </span>{{ $tournament->name }}</h5>
+
                     <input type="hidden" name="tournament" value="{{$tournament->id}}">
                     <div class="form-group">
                         <label for="">Seleccione el grupo</label>
@@ -41,14 +42,13 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Siguiente" class="btn btn-info">
+                        <input type="submit" value="Fechas para Grupo" class="btn btn-info">
                     </div>
                 </form>
             @endif
 
-            @if(isset($stages) && !request()->query('stage'))
+            @if(isset($stages) && !request()->query('stage') && count($stages)>0)
                 <form action="">
-                    <h5><span class="text-info">Torneo: </span>{{ $tournament->name }}</h5>
                     <input type="hidden" name="tournament" value="{{$tournament->id}}">
                     <div class="form-group">
                         <label for="">Seleccione la Etapa</label>
@@ -59,7 +59,7 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <input type="submit" value="Siguiente" class="btn btn-info">
+                        <input type="submit" value="Fechas para etapa" class="btn btn-dark">
                     </div>
                 </form>
             @endif
