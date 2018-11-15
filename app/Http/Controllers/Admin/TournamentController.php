@@ -80,7 +80,7 @@ class TournamentController extends Controller
     public function edit($id)
     {
         $t = Tournament::find($id);
-        if(count($t)>0) {
+        if(($t->count())>0) {
             $sports = Sport::all();
             return view('admin.tournament.edit', ['tournament'=> $t, 'sports'=> $sports]);
         }
@@ -98,7 +98,7 @@ class TournamentController extends Controller
         ]);
 
         $t = Tournament::find($id);
-        if (count($t)>0){
+        if (($t->count())>0){
             $t->name = $request->name;
             $t->date_init = $request->date_init;
             $t->date_end = $request->date_end;

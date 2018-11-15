@@ -84,7 +84,7 @@ class PlayerController extends Controller
     public function edit($id)
     {
         $p = Player::find($id);
-        if (count($p)>0) {
+        if (($p->count())>0) {
             return view('admin.players.edit', ['player'=> $p]);
         }
         abort(404);
@@ -101,7 +101,7 @@ class PlayerController extends Controller
         ], $this->messages());
 
         $p = Player::find($id);
-        if (count($p)>0){
+        if (($p->count())>0){
             $p->name = $request->name;
             $p->last_name = $request->last_name;
             $p->type = $request->type;
@@ -120,7 +120,7 @@ class PlayerController extends Controller
     public function destroy($id)
     {
         $p = Player::find($id);
-        if (count($p)>0){
+        if (($p->count())>0){
             $tc = PlayerTeam::where("player_id", $id);
             $tc->delete();
             $p->delete();

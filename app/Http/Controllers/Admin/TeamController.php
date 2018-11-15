@@ -57,7 +57,7 @@ class TeamController extends Controller
 
         $team = Team::where($con)->orderBy('sport_id', 'desc')->get();
 
-        if (count($team)<=0){
+        if (($team->count())<=0){
             session()->flash("info", "No hay equipos!");
         }else{
             session()->remove("info");
@@ -67,7 +67,7 @@ class TeamController extends Controller
         // adding players numbers
         $newTeams = array();
         foreach ($team as $t){
-            $t['players'] = count(PlayerTeam::where('team_id', $t->id)->get());
+            $t['players'] = (PlayerTeam::where('team_id', $t->id)->get())->count();
             $newTeams[] = $t;
         }
 
@@ -112,7 +112,7 @@ class TeamController extends Controller
     public function show($id)
     {
         $team = Team::find($id);
-        if (count($team)>0) {
+        if (($team)->count()>0) {
             $pt = PlayerTeam::join('players', 'players.id', 'player_teams.player_id')
                 ->where('team_id', $id)->get();
 
@@ -129,7 +129,7 @@ class TeamController extends Controller
         $t = Team::find($id);
         $colors = Team::select('logo', 'alias')->distinct('alias')->get();
         $sports = Sport::all();
-        if (count($t)>0) {
+        if (($t->count())>0) {
             return view('admin.teams.edit', ['team'=> $t, 'sports'=> $sports, 'colors'=> $colors]);
         }
 
@@ -162,12 +162,12 @@ class TeamController extends Controller
     public function destroy($id)
     {
         $t = Team::find($id);
-        if (count($t)>0){
+        if (($t->count())>0){
 
             $pt = PlayerTeam::where('team_id', $id)->get();
             $tg = TeamGroup::where("team_id", $id)->get();
 
-            if (count($pt)>0 || count($tg)>0) {
+            if (($pt->count())>0 || ($tg->count())>0) {
                 $t->status = 0;
                 $t->save();
                 session()->flash('info', "Este equipo tiene jugadores o grupos asignados, se ha cambiado el estado!");

@@ -11,7 +11,9 @@ class PageController extends Controller
     public function show_page($url){
 
         $p = Page::where('url', $url)->first();
-        if (count($p)==0){abort(404);}
+        if ($p == null)
+            abort(404);
+        if (($p->count())==0){abort(404);}
         return view('guest.pages.index', ['page'=> $p]);
     }
 }

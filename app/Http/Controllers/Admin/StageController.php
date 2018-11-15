@@ -47,7 +47,7 @@ class StageController extends Controller
     public function change_result(Request $request){
         //dd($request);
         $tt = TimeTable::find($request->time_table_id);
-        if (count($tt)==0) abort(404);
+        if (($tt->count())==0) abort(404);
         switch ($request->btn_set){
             case 'revert_one':
                 $sc = StageControl::where([
@@ -55,7 +55,7 @@ class StageController extends Controller
                     ['team', $request->team]
                 ])->orderBy('id', 'desc')->first();
 
-                if (count($sc)>0) {
+                if (($sc!=null)) {
                     if ($request->team == 'team_a') {
                         $tt->team_id_a = $sc->team_old;
                     } elseif ($request->team == 'team_b') {
@@ -118,7 +118,7 @@ class StageController extends Controller
 
             $t = Tournament::find($request->query('tournament'));
 
-            if (count($t)<=0)
+            if (($t->count())<=0)
                 abort(404);
 
             /*$g = Group::where("tournament_id", $t->id)->get();

@@ -47,7 +47,7 @@
                 <li><a href="{{ route('torneo.times', ['url'=> $tournament->url ]) }}">Fechas</a></li>
                 <li><a href="{{route('torneo.grupos', ['url'=>$tournament->url])}}">Resultados</a></li>
                 <li><a href="{{route('torneo.final', ['url'=>$tournament->url])}}">Etapa Final</a></li>
-                {{--<li><a href="{{route('torneo.stats', ['url'=>$tournament->url]) }}">Estadistica</a></li>--}}
+                <li><a href="{{route('torneo.stats', ['url'=>$tournament->url]) }}">Estadistica</a></li>
             @foreach($pages as $p)
                     <li><a href="{{ route('torneo.page', ['url'=> $tournament->url, 'page'=> $p->url]) }}">{{$p->title}}</a></li>
                 @endforeach

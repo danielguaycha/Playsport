@@ -76,7 +76,7 @@ class PageController extends Controller
     public function edit($id)
     {
         $p = Page::find($id);
-        if (count($p)== 0){ abort(404); }
+        if (($p->count())== 0){ abort(404); }
 
         $t = Tournament::where('organizations_id', Auth::user()->organization_id)->get();
 
@@ -116,7 +116,7 @@ class PageController extends Controller
     public function destroy($id)
     {
         $p = Page::find($id);
-        if(count($p)==0){abort(404);}
+        if(($p->count())==0){abort(404);}
         $p->delete();
         session()->flash("success", "Página eliminada con exito!");
         return back();

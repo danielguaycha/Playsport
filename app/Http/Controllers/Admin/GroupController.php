@@ -42,7 +42,7 @@ class GroupController extends Controller
         }else{
             $t = Tournament::find($request->query('tournament'));
 
-            if (count($t)<=0)
+            if (($t->count())<=0)
                abort(404);
 
             $sport = Sport::find($t->sports_id);
@@ -55,7 +55,7 @@ class GroupController extends Controller
                     ['type', $t->type]
                 ])->get();
 
-            if (count($team)<=0){
+            if (($team->count())<=0){
                session()->flash('info', 'Aún no hay equipos!');
             }
 
@@ -82,7 +82,7 @@ class GroupController extends Controller
             return redirect(route("group.create", ['tournament'=> $request->tournament_id]));
         }
 
-        if (count($request->get("to_team"))<=1)
+        if (($request->get("to_team")->count())<=1)
         {
             session()->flash('warning', 'Necesitas escoger minimo 2 equipos para crear un grupo!');
             return redirect(route("group.create", ['tournament'=> $request->tournament_id]));

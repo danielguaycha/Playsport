@@ -33,11 +33,11 @@ class TimeTableController extends Controller
         if ($request->query('tournament') && $request->query('group')){
 
             $t = Tournament::find($request->query('tournament'));
-            if (count($t)<=0)
+            if (($t->count())<=0)
                 abort(404);
 
             $group = Group::find($request->query('group'));
-            if (count($group)<=0)
+            if (($group->count())<=0)
                 abort(404);
 
             return($this->process_group($t, $group));
@@ -45,11 +45,11 @@ class TimeTableController extends Controller
 
         if ($request->query('tournament') && $request->query('stage')) {
             $t = Tournament::find($request->query('tournament'));
-            if (count($t)<=0)
+            if (($t->count())<=0)
                 abort(404);
 
             $stage = Stage::find($request->query('stage'));
-            if (count($stage)<=0)
+            if (($stage->count())<=0)
                 abort(404);
 
             return($this->process_stage($t, $stage));
@@ -74,7 +74,7 @@ class TimeTableController extends Controller
             if (!$request->query('group') && !$request->query('stage')){
                 $group = Group::where('tournament_id', $t->id)->get();
                 $stages = Stage::where("tournament_id", $t->id)->get();
-                if (count($group) > 0 || count($stages)>0) {
+                if (($group->count()) > 0 || ($stages->count())>0) {
                     return view("admin.timetable.create", [
                         'tournament' => $t,
                         'groups' => $group,
@@ -101,7 +101,7 @@ class TimeTableController extends Controller
 
         $teams = explode(";", $request->teams);
 
-        if (count($teams)!=2){
+        if (($teams->count())!=2){
             session()->flash('warning', "Necesitas escoger dos equipos!");
             return back();
         }
@@ -121,7 +121,7 @@ class TimeTableController extends Controller
         $tt->stage_id = null;
 
         session()->flash("success", "Fecha guardada con exito ".(
-            (count($timeTable)>0?", pero ya existe un encuentro para estos equipos":"")
+            (($timeTable->count())>0?", pero ya existe un encuentro para estos equipos":"")
             ));
         $tt->save();
 
@@ -131,7 +131,7 @@ class TimeTableController extends Controller
     public function store_stage(Request $request){
 
         $tt_num = TimeTable::where('stage_id', $request->get('stage_id'))->get();
-        if(count($tt_num) >= $request->get('num')){
+        if(($tt_num->count()) >= $request->get('num')){
             session()->flash("warning", "Ya has agregado dos encuentros");
             return back();
         }
@@ -198,7 +198,7 @@ class TimeTableController extends Controller
                     'b.name as team_b', 'b.alias as alias_b', 'b.type as type_b', 'b.logo as logo_b',
                     'tournaments.name as torneo')->first();
         }
-        if (count($tt)==0) abort(404);
+        if (($tt->count())==0) abort(404);
 
         return view('admin.timetable.edit',  ['table'=> $tt]);
     }
@@ -206,7 +206,7 @@ class TimeTableController extends Controller
     public function update(Request $request, $id)
     {
         $tt = TimeTable::find($id);
-        if (count($tt)==0) abort(404);
+        if (($tt->count())==0) abort(404);
 
         $tt->place = $request->place;
         $tt->hour=$request->hour;
@@ -220,7 +220,7 @@ class TimeTableController extends Controller
     public function destroy($id)
     {
         $tt = TimeTable::find($id);
-        if (count($tt)!=0){
+        if (($tt->count())!=0){
             session()->flash("success", "Fecha eliminada con exito");
             $tt->delete();
             return back();
@@ -239,7 +239,7 @@ class TimeTableController extends Controller
         ])
             ->select('time_tables.*')
             ->first();
-        if (count($tt)==0) abort(404);
+        if (($tt->count())==0) abort(404);
         return view('admin.timetable.edit.group', ['timetable'=> $tt]);
     }
 

@@ -22,7 +22,7 @@ class ResultController extends Controller
     {
         $tt = TimeTable::find($id);
 
-        if (count($tt)<=0) abort(404);
+        if (($tt->count())<=0) abort(404);
 
         if ($tt->group_id != null ){
             return $this->process_group($id);
@@ -109,8 +109,6 @@ class ResultController extends Controller
     public function update_status($time_table_id, Request $request){
         if ($request->has('btn_status')){
             $tt = TimeTable::find($time_table_id);
-            if (count($tt)==0) abort(404);
-
             $tt->status = $request->btn_status;
             $tt->save();
             session()->flash("success", "Estado cambiado");
@@ -121,7 +119,7 @@ class ResultController extends Controller
 
     public function destroy_stats($id){
         $s = Stat::find($id);
-        if (count($s)>0){
+        if (($s->count())>0){
             $s->delete();
             session()->flash("success", "Eliminación correcta");
             return back();
@@ -302,7 +300,7 @@ class ResultController extends Controller
 
     private function _update_results($request){
         $rs = Result::where('time_table_id', $request->get('time_table_id'))->first();
-        if (count($rs)==0){
+        if ($rs==null){
             $rs = new Result();
             $rs->result_a = $request->get("result_a");
             $rs->result_b = $request->get("result_b");

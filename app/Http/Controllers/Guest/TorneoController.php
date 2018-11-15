@@ -11,6 +11,7 @@ use App\TimeTable;
 use App\Tournament;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class TorneoController extends Controller
 {
@@ -24,10 +25,10 @@ class TorneoController extends Controller
             ['type', 'tournament'],
             ['parent', $t->id]
         ])->select('title', 'url')->get();
-        if (count($t)==0) {abort(404);}
+        if (($t->count())==0) {abort(404);}
 
         $g = Group::where('tournament_id', $t->id)->get();
-        if (count($g)==0){abort(404);}
+        if (($g->count())==0){abort(404);}
 
         $tg = TeamGroup::join('teams', 'teams.id', 'team_groups.team_id')
             ->select("team_groups.*", 'teams.name', 'teams.alias', 'teams.logo', 'teams.type')
@@ -46,20 +47,35 @@ class TorneoController extends Controller
 
     public function show_top($id){
         $t = $this->_get_tournament($id);
-        if (count($t)==0) {abort(404);}
+        if (($t->count())==0) {abort(404);}
         $p = Page::where([
             ['type', 'tournament'],
             ['parent', $t->id]
         ])->select('title', 'url')->get();
 
-        $goals = Stat::join('players', 'players.id', 'stats.player_id')
+        /*$goals = Stat::join('players', 'players.id', 'stats.player_id')
             ->join('player_teams', 'player_teams.player_id', 'players.id')
             ->join('teams', 'teams.id', 'player_teams.team_id')
             ->where("stats.tournament_id", $t->id)
-            ->select('players.name', 'players.last_name', 'stats.goals', 'teams.name as team', 'teams.alias', 'teams.logo', 'teams.type')
+            ->select('players.name', 'players.last_name', 'stats.goals', 'teams.name as team', 'teams.alias',
+                'teams.logo', 'teams.type')
             ->orderBy('stats.goals', 'desc')
             ->limit(5)
-            ->get();
+            ->get();*/
+
+        $goals = Stat::join('players', 'players.id', 'stats.player_id')
+        ->join('player_teams', 'player_teams.player_id', 'players.id')
+        ->join('teams', 'teams.id', 'player_teams.team_id')
+        ->select(DB::raw('SUM(stats.goals) as goals'), 'stats.player_id', 'players.name',
+            'players.last_name', 'teams.name as team', 'teams.alias',
+            'teams.logo', 'teams.type')
+        ->where("stats.tournament_id", $t->id)
+        ->groupBy('stats.player_id', 'teams.name', 'teams.alias', 'teams.type', 'teams.logo', 'players.name',
+            'players.last_name')
+        ->orderBy('goals', 'desc')
+        ->limit(8)
+        ->get();
+
 
         return view('guest.torneo.top', [
             'goals'=> $goals,
@@ -71,7 +87,7 @@ class TorneoController extends Controller
     public function show_times($id, Request $request){
 
         $t = $this->_get_tournament($id);
-        if (count($t)==0) {abort(404);}
+        if (($t->count())==0) {abort(404);}
 
         $p = Page::where([
             ['type', 'tournament'],
@@ -112,7 +128,7 @@ class TorneoController extends Controller
 
     public function show_page($id, $page){
         $t = $this->_get_tournament($id);
-        if (count($t)==0) {abort(404);}
+        if (($t->count())==0) {abort(404);}
         $p = Page::where([
             ['type', 'tournament'],
             ['parent', $t->id]
@@ -120,7 +136,7 @@ class TorneoController extends Controller
 
         $content = Page::where('url', $page)->first();
 
-        if (count($content)== 0){abort(404);}
+        if (($content->count())== 0){abort(404);}
         return view('guest.torneo.page', [
             'tournament'=> $t,
             'pages'=> $p,

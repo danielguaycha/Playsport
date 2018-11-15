@@ -24,19 +24,19 @@
                                         {{-- Team A --}}
                                         <div
                                                 @if($s->result_a !=null)
-                                                @if($s->result_a>$s->result_b)
-                                                class="winner"
-                                                @elseif($s->result_a==$s->result_b)
-                                                @if($s->status == 2 && $s->penal_a > $s->penal_b)
-                                                class="winner"
-                                                @elseif($s->status == 1 || $s->status == 0)
-                                                class="par"
-                                                @else
-                                                class="lose"
-                                                @endif
-                                                @else
-                                                class="lose"
-                                                @endif
+                                                    @if($s->result_a>$s->result_b)
+                                                    class="winner"
+                                                    @elseif($s->result_a==$s->result_b)
+                                                    @if($s->status == 2 && $s->penal_a > $s->penal_b)
+                                                    class="winner"
+                                                    @elseif($s->status == 1 || $s->status == 0)
+                                                    class="par"
+                                                    @else
+                                                    class="lose"
+                                                    @endif
+                                                    @else
+                                                    class="lose"
+                                                    @endif
                                                 @endif
                                         >
                                             @if($s->type_a == 'Male')
@@ -52,7 +52,7 @@
                                         {{-- Team B--}}
                                         <div
                                                 @if($s->result_a !=null)
-                                                @if($s->result_a>$s->result_b)
+                                                @if($s->result_a<$s->result_b)
                                                 class="winner"
                                                 @elseif($s->result_a==$s->result_b)
                                                 @if($s->status == 2 && $s->penal_a < $s->penal_b)
