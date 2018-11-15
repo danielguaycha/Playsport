@@ -73,7 +73,7 @@
                                     {{csrf_field()}}
                                     <button type="button" @click.prevent="delTimeTable('tt_{{$tt->id}}')" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                                 </form>
-                                <a href="{{ route('timetable.edit', ['id'=> $tt->id, 'group_id'=> $tt->group_id ]) }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
+                                <a href="{{ route('timetable.edit', ['id'=> $tt->id, 'stage_id'=> $stage->id ]) }}" class="btn btn-info btn-sm"><i class="fa fa-edit"></i></a>
                             </th>
                         </tr>
                     @endforeach

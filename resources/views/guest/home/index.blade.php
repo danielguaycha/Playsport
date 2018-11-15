@@ -157,10 +157,10 @@
         let right = document.querySelector('.main-teams-right');
 
         let letfTeams = {
-            "1a": "",
+            "1a": "#146f3c",
             "1b": "#d85878",
             "2a": "#e4a561",
-            "2b": "#1a73a5",
+            "2b": "#1a75a5",
             "3a": "#0068D6",
             "4A": "#04948D",
         };
@@ -168,7 +168,7 @@
         let rightTeams = {
             "5a": "#52669a",
             "6a": "#17BAF4",
-            "7a": "",
+            "7a": "#417596",
             "8a": "#f14742",
             "9a": "",
             "10a": "#0491ad"
@@ -183,7 +183,7 @@
                 el.innerHTML = `<span>${key.toUpperCase()}</span>`;
                 el.style.background = `${teams[key]}`;
                 if (key.length > 2) {
-                    el.style.padding = ".8rem 10px";
+                    el.style.padding = ".8rem 8px";
                 }
                 container.appendChild(el);
             }

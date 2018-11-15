@@ -2105,41 +2105,41 @@ hr {
     .matches-content {
       grid-template: auto/repeat(3, 1fr); } }
 
-.matches-content a, .group-team {
+.matches-content a, .group-team a {
   text-decoration: none;
   display: block;
   box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2);
   color: #24292e;
   padding: .5rem 0; }
-  .matches-content a .teams div, .group-team .teams div {
+  .matches-content a .teams div, .group-team a .teams div {
     display: flex;
     align-items: center;
     padding: 0 0.3rem;
     border-right: 4px solid transparent; }
-    .matches-content a .teams div img, .group-team .teams div img {
+    .matches-content a .teams div img, .group-team a .teams div img {
       width: 25px; }
-    .matches-content a .teams div span, .group-team .teams div span {
+    .matches-content a .teams div span, .group-team a .teams div span {
       flex: 0 1 100%;
       padding-left: 1rem; }
-    .matches-content a .teams div:nth-child(1), .group-team .teams div:nth-child(1) {
+    .matches-content a .teams div:nth-child(1), .group-team a .teams div:nth-child(1) {
       margin-bottom: 5px; }
-    .matches-content a .teams div.winner, .group-team .teams div.winner {
+    .matches-content a .teams div.winner, .group-team a .teams div.winner {
       border-right: 4px solid #38c172; }
-    .matches-content a .teams div.par, .group-team .teams div.par {
+    .matches-content a .teams div.par, .group-team a .teams div.par {
       border-right: 4px solid #f6993f; }
-    .matches-content a .teams div.lose, .group-team .teams div.lose {
+    .matches-content a .teams div.lose, .group-team a .teams div.lose {
       border-right: 4px solid #e3342f; }
-  .matches-content a .date, .group-team .date {
+  .matches-content a .date, .group-team a .date {
     text-align: center;
     margin-top: 5px;
     display: flex;
     justify-content: space-between;
     padding: 5px 10px 0px 10px;
     border-top: 1px solid #9e9e9e2e; }
-    .matches-content a .date span, .group-team .date span {
+    .matches-content a .date span, .group-team a .date span {
       font-size: 14px;
       color: #909090; }
-      .matches-content a .date span.status, .group-team .date span.status {
+      .matches-content a .date span.status, .group-team a .date span.status {
         margin: 0 auto;
         color: #00466f; }
 
@@ -2209,12 +2209,16 @@ hr {
     display: block; }
 
 .group-team {
+  position: relative;
   background: white;
   width: 100%;
   justify-self: center; }
   @media only screen and (min-width: 767.98px) {
     .group-team {
       width: 70%; } }
+  .group-team .buttons {
+    position: absolute;
+    right: 0; }
 
 .stage {
   display: grid; }
@@ -2275,12 +2279,17 @@ hr {
         width: 100%; } }
 
 .matches {
-  text-decoration: none;
-  color: #24292e;
+  position: relative;
   justify-self: center;
   width: 80%;
   background: white;
   box-shadow: #00000033 0px 1px 3px 0px; }
+  .matches a {
+    text-decoration: none;
+    color: #24292e; }
+  .matches .buttons {
+    position: absolute;
+    right: 0; }
   @media only screen and (min-width: 767.98px) {
     .matches {
       width: 40%; } }
@@ -2314,6 +2323,9 @@ hr {
         color: #00466f; }
   .matches img {
     width: 32px; }
+
+.team-center {
+  justify-self: center; }
 
 .table {
   width: 100%;

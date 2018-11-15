@@ -90,7 +90,10 @@
                             @endif
                             @auth
                                 <td>
-                                    <a href="{{ route('result.edit', ['id'=> $g->id]) }}" class="btn"><i class="fa fa-play"></i></a>
+                                    <a href="{{ route('result.edit', ['id'=> $g->id]) }}"><i class="fa fa-play"></i></a>
+                                    <a href="{{ route('timetable.edit', ['id'=> $g->id, 'group_id'=> $g->group_id ]) }}">
+                                        <i class="fa fa-clock"></i>
+                                    </a>
                                 </td>
                             @endauth
                         </tr>
@@ -110,7 +113,7 @@
                             </div>
                             @endif
                             <div class="matches-content">
-                                @foreach($time_groups as $tg)
+                                @foreach($time_groups as $i=>$tg)
 
                                     @if($g->name == $tg->group)
                                         <a @auth href="{{route('result.edit', ['id'=> $tg->id])}}" @endauth>
@@ -161,8 +164,13 @@
                                             </div>
                                             <div class="date">
                                                 @if($tg->status == -1)
-                                                    <span>{{ $tg->date }}</span>
-                                                    <span>{{ $tg->hour }}</span>
+                                                    @if($tournament->sports_id == 3)
+                                                        <span>{{ $tg->date }}</span>
+                                                        <span>--:--</span>
+                                                    @else
+                                                        <span>{{ $tg->date }}</span>
+                                                        <span>{{ $tg->hour }}</span>
+                                                    @endif
                                                 @elseif($tg->status == 0)
                                                     <span>En proceso</span>
                                                 @elseif($tg->status == 1)

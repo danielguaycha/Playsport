@@ -175,14 +175,46 @@ class TimeTableController extends Controller
 
     public function edit($id, Request $request)
     {
-        if ($request->query('group_id')){
-           return $this->edit_group($id, $request->query('group_id'));
+        $tt = null;
+        if ($request->query('group_id')) {
+            $tt = TimeTable::join('groups', 'groups.id', 'time_tables.group_id')
+                ->join('teams as a', 'a.id', 'time_tables.team_id_a')
+                ->join('teams as b', 'b.id', 'time_tables.team_id_b')
+                ->join('tournaments', 'tournaments.id', 'groups.tournament_id')
+                ->where('time_tables.id', $id)
+                ->select('time_tables.*', 'groups.name as title',
+                    'a.name as team_a', 'a.alias as alias_a', 'a.type as type_a', 'a.logo as logo_a',
+                    'b.name as team_b', 'b.alias as alias_b', 'b.type as type_b', 'b.logo as logo_b',
+                   'tournaments.name as torneo')->first();
         }
+        elseif($request->query('stage_id')){
+            $tt = TimeTable::join('stages', 'stages.id', 'time_tables.stage_id')
+                ->join('teams as a', 'a.id', 'time_tables.team_id_a')
+                ->join('teams as b', 'b.id', 'time_tables.team_id_b')
+                ->join('tournaments', 'tournaments.id', 'stages.tournament_id')
+                ->where('time_tables.id', $id)
+                ->select('time_tables.*', 'stages.name as title',
+                    'a.name as team_a', 'a.alias as alias_a', 'a.type as type_a', 'a.logo as logo_a',
+                    'b.name as team_b', 'b.alias as alias_b', 'b.type as type_b', 'b.logo as logo_b',
+                    'tournaments.name as torneo')->first();
+        }
+        if (count($tt)==0) abort(404);
+
+        return view('admin.timetable.edit',  ['table'=> $tt]);
     }
 
     public function update(Request $request, $id)
     {
-        //
+        $tt = TimeTable::find($id);
+        if (count($tt)==0) abort(404);
+
+        $tt->place = $request->place;
+        $tt->hour=$request->hour;
+        $tt->date = $request->date;
+
+        $tt->save();
+        session()->flash("info", "Registro actualizado con exito");
+        return back();
     }
 
     public function destroy($id)
