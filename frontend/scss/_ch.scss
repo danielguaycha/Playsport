@@ -1,0 +1,49 @@
+.etapa-final {
+    background: #272a33;
+    height: calc(100% - 54px);
+    iframe {
+        width: 100%;
+        @include tablet {
+            width: 69.8%;
+            margin: 0 auto;
+            display: block;
+            height: 100% !important;
+        }
+    }
+}
+.vh100{
+    height: 91.8vh;
+}
+
+.alert {
+    padding: 1.25rem;
+    margin-top: 1.25rem;
+    margin-bottom: 1.25rem;
+    border: 1px solid #eee;
+    border-left-width: .25rem;
+    border-radius: .25rem;
+    h5 {
+        margin-bottom: .5rem;
+        font-family: inherit;
+        font-weight: 500;
+        font-size: 1.1em;
+        margin-top: 0;
+        line-height: 1.2;
+        color: inherit;
+    }
+    p {
+        margin-bottom: 0;
+    }
+    &.info {
+        border-left-color: $blue;
+        i {
+            color: $blue;
+        }
+    }
+    &.warning {
+        border-left-color: $orange;
+    }
+    &.success {
+        border-left-color: $green;
+    }
+}

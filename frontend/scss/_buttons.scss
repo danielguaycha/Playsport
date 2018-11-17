@@ -1,0 +1,12 @@
+.btn {
+    text-decoration: none;
+    display: block;
+    padding: 7px 13px;
+    &:active{
+        outline: none;
+    }
+    &.primary{
+        background: $primary;
+        color: white;
+    }
+}

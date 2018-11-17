@@ -1,0 +1,46 @@
+@mixin movil-only {
+    @media only screen and (max-width: #{$movil}){
+        @content;
+    }
+}
+
+@mixin bp-movil {
+    @media only screen and (min-width: #{$movil}) and (max-width: #{$tablet}){
+        @content;
+    }
+}
+
+@mixin bp-tablet {
+    @media only screen and (min-width: #{$tablet}) and (max-width: #{$desktop}){
+        @content;
+    }
+}
+
+@mixin bp-desktop {
+    @media only screen and (min-width: #{$desktop}){
+        @content;
+    }
+}
+
+
+@mixin movil {
+    @media only screen and (min-width: #{$movil}){
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media only screen and (min-width: #{$tablet}){
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media only screen and (min-width: #{$desktop}){
+        @content;
+    }
+}
+
+@mixin degradado($color1, $color2) {
+    background: linear-gradient(to right, $color1 0%, $color2 100%);
+}

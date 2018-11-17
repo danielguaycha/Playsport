@@ -1,0 +1,23 @@
+{
+  "name": "playsport",
+  "version": "1.0.0",
+  "description": "Plantilla html",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Daniel G",
+  "license": "ISC",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-wait": "0.0.2"
+  },
+  "devDependencies": {
+    "gulp-cssmin": "^0.2.0",
+    "gulp-imagemin": "^4.1.0",
+    "gulp-strip-css-comments": "^2.0.0",
+    "gulp-strip-json-comments": "^3.0.0"
+  }
+}

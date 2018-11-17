@@ -13,26 +13,26 @@ class InstallSeeder extends Seeder
     public function run()
     {
         DB::table('organizations')->insert([
-            'name'=> 'UAIC',
+            'name'=> 'OrganizationName',
             'logo'=>'logo.png'
         ]);
         DB::table('users')->insert([
             [
-                'name'=> 'Daniel Guaycha',
-                'email'=> 'danielguaycha95@gmail.com',
-                'password'=> bcrypt("dg851996"),
+                'name'=> 'Admin 1',
+                'email'=> 'admin@gmail.com',
+                'password'=> bcrypt("admin"),
                 'organization_id'=> 1,
             ],
             [
-                'name'=> 'Nixon Quezada',
-                'email'=> 'nxnqzd@gmail.com',
-                'password'=> bcrypt("juegos12345678"),
+                'name'=> 'Admin 2',
+                'email'=> 'admin2@gmail.com',
+                'password'=> bcrypt("admin"),
                 'organization_id'=> 1
             ],
             [
-                'name'=> 'Erick Cañarte',
-                'email'=> 'ca.arte07@hotmail.com',
-                'password'=> bcrypt("juegos12345678"),
+                'name'=> 'Admin 3',
+                'email'=> 'admin3@gmail.com',
+                'password'=> bcrypt("admin"),
                 'organization_id'=> 1
             ]
         ]);

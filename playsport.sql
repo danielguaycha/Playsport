@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 15-11-2018 a las 01:20:26
+-- Tiempo de generación: 17-11-2018 a las 17:44:36
 -- Versión del servidor: 5.7.19
 -- Versión de PHP: 7.1.9
 
@@ -80,7 +80,17 @@ CREATE TABLE IF NOT EXISTS `group_controls` (
   PRIMARY KEY (`id`),
   KEY `group_controls_time_table_id_foreign` (`time_table_id`),
   KEY `group_controls_team_group_id_foreign` (`team_group_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=134 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `group_controls`
+--
+
+INSERT INTO `group_controls` (`id`, `pj`, `pg`, `pe`, `pp`, `gf`, `gc`, `pts`, `time_table_id`, `team_group_id`, `team_id`) VALUES
+(128, 1, 1, 0, 0, 4, 3, 3, 17, 16, 14),
+(129, 1, 0, 0, 1, 3, 4, 0, 17, 14, 16),
+(132, 1, 1, 0, 0, 11, 10, 3, 40, 34, 38),
+(133, 1, 0, 0, 1, 10, 11, 0, 40, 33, 34);
 
 -- --------------------------------------------------------
 
@@ -212,7 +222,7 @@ CREATE TABLE IF NOT EXISTS `players` (
   `organization_id` int(10) UNSIGNED DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `players_organization_id_foreign` (`organization_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `players`
@@ -275,7 +285,13 @@ INSERT INTO `players` (`id`, `name`, `last_name`, `age`, `dni`, `type`, `number`
 (55, 'Susy', 'Fernandez', 18, '0', 'Female', 0, NULL, '2018-11-13 05:07:01', '2018-11-13 05:07:01', 1),
 (56, 'Heydi', 'MIte', 18, '0', 'Female', 0, NULL, '2018-11-13 05:07:13', '2018-11-13 05:07:13', 1),
 (57, 'Ximena', 'Pacheco', 18, '0', 'Female', 0, NULL, '2018-11-13 05:07:26', '2018-11-13 05:07:26', 1),
-(58, 'María', 'Jimenez', 18, '0', 'Female', 0, NULL, '2018-11-13 05:07:40', '2018-11-13 05:07:40', 1);
+(58, 'María', 'Jimenez', 18, '0', 'Female', 0, NULL, '2018-11-13 05:07:40', '2018-11-13 05:07:40', 1),
+(59, 'Lakeisha', 'Ochoa', 18, '0', 'Female', 0, NULL, '2018-11-15 12:22:17', '2018-11-15 12:22:17', 1),
+(60, 'Dayana', 'Tigre', 18, '0', 'Female', 0, NULL, '2018-11-15 12:22:52', '2018-11-15 12:22:52', 1),
+(61, 'Jeniffer', 'Herrera', 18, '0', 'Female', 0, NULL, '2018-11-15 12:23:17', '2018-11-15 12:23:17', 1),
+(62, 'Fernanda', 'Suarez', 18, '0', 'Female', 0, NULL, '2018-11-15 12:23:36', '2018-11-15 12:23:36', 1),
+(63, 'Maria', 'Contento', 18, '0', 'Female', 0, NULL, '2018-11-15 12:24:23', '2018-11-15 12:24:23', 1),
+(64, 'Ximena', 'Pacheco', 18, '0', 'Female', 0, NULL, '2018-11-15 12:24:53', '2018-11-15 12:24:53', 1);
 
 -- --------------------------------------------------------
 
@@ -352,7 +368,13 @@ INSERT INTO `player_teams` (`team_id`, `player_id`) VALUES
 (17, 55),
 (17, 56),
 (17, 57),
-(17, 58);
+(17, 58),
+(18, 59),
+(18, 60),
+(20, 61),
+(20, 62),
+(21, 63),
+(21, 64);
 
 -- --------------------------------------------------------
 
@@ -372,22 +394,22 @@ CREATE TABLE IF NOT EXISTS `results` (
   `time_table_id` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`id`),
   KEY `results_time_table_id_foreign` (`time_table_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=28 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `results`
 --
 
 INSERT INTO `results` (`id`, `result_a`, `result_b`, `penal_a`, `penal_b`, `others_points`, `desc`, `time_table_id`) VALUES
-(1, 0, 0, 0, 0, NULL, NULL, 15),
+(1, 2, 3, 0, 0, NULL, NULL, 15),
 (2, 0, 0, 0, 0, NULL, NULL, 1),
-(3, 0, 0, 0, 0, NULL, NULL, 19),
+(3, 7, 2, 0, 0, NULL, NULL, 19),
 (4, 0, 0, 0, 0, NULL, NULL, 18),
-(5, 0, 0, 0, 0, NULL, NULL, 16),
-(6, 0, 0, 0, 0, NULL, NULL, 17),
+(5, 5, 3, 0, 0, NULL, NULL, 16),
+(6, 4, 3, 0, 0, NULL, NULL, 17),
 (7, 0, 0, 0, 0, NULL, NULL, 20),
 (8, 0, 0, 0, 0, NULL, NULL, 50),
-(9, 0, 0, 0, 0, NULL, NULL, 40),
+(9, 11, 10, 0, 0, NULL, NULL, 40),
 (10, 0, 0, 0, 0, NULL, NULL, 43),
 (11, 0, 0, 0, 0, NULL, NULL, 46),
 (12, 0, 0, 0, 0, NULL, NULL, 49),
@@ -399,7 +421,13 @@ INSERT INTO `results` (`id`, `result_a`, `result_b`, `penal_a`, `penal_b`, `othe
 (18, 0, 0, 0, 0, NULL, NULL, 48),
 (19, 0, 0, 0, 0, NULL, NULL, 2),
 (20, 0, 0, 0, 0, NULL, NULL, 3),
-(21, 0, 0, 0, 0, NULL, NULL, 53);
+(21, 0, 0, 0, 0, NULL, NULL, 53),
+(22, 0, 0, 0, 0, NULL, NULL, 12),
+(23, 22, 12, 0, 0, NULL, NULL, 21),
+(24, 12, 23, 0, 0, NULL, NULL, 23),
+(25, 0, 0, 0, 0, NULL, NULL, 28),
+(26, 2, 1, 0, 0, NULL, NULL, 55),
+(27, 1, 1, 4, 5, NULL, NULL, 56);
 
 -- --------------------------------------------------------
 
@@ -427,7 +455,7 @@ CREATE TABLE IF NOT EXISTS `sports` (
 
 INSERT INTO `sports` (`id`, `name`, `duration`, `status`, `min_players`, `max_players`, `denomination`, `rules`, `logo`) VALUES
 (1, 'Fútbol', '20.00', 1, 5, 7, 'Goles', 'Ninguna', NULL),
-(2, 'Basket', '20.00', 1, 3, 5, 'Putos', 'Ninguna', NULL),
+(2, 'Basket', '20.00', 1, 3, 5, 'Puntos', 'Ninguna', NULL),
 (3, 'Volley', '-1.00', 1, 3, 3, 'Puntos', 'Ninguna', NULL),
 (4, 'Futsal', '20.00', 1, 4, 6, 'Goles', 'Ninguno', 'logo.png');
 
@@ -479,7 +507,7 @@ CREATE TABLE IF NOT EXISTS `stage_controls` (
   `team` varchar(15) COLLATE utf8mb4_unicode_ci NOT NULL,
   PRIMARY KEY (`id`),
   KEY `stage_controls_time_table_id_foreign` (`time_table_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `stage_controls`
@@ -512,7 +540,40 @@ CREATE TABLE IF NOT EXISTS `stats` (
   KEY `stats_player_id_foreign` (`player_id`),
   KEY `stats_team_id_foreign` (`team_id`),
   KEY `stats_time_table_id_foreign` (`time_table_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Volcado de datos para la tabla `stats`
+--
+
+INSERT INTO `stats` (`id`, `yellow`, `red`, `goals`, `value`, `observation`, `tournament_id`, `player_id`, `team_id`, `time_table_id`) VALUES
+(10, 0, 0, 2, 0, '', 2, 37, 14, 15),
+(11, 0, 0, 1, 0, '', 2, 56, 17, 15),
+(12, 0, 0, 1, 0, '', 2, 58, 17, 15),
+(13, 0, 0, 1, 0, '', 2, 53, 17, 15),
+(14, 0, 0, 2, 0, '', 2, 36, 14, 17),
+(15, 0, 0, 1, 0, '', 2, 31, 14, 17),
+(16, 0, 0, 1, 0, '', 2, 37, 14, 17),
+(17, 0, 0, 2, 0, '', 2, 49, 16, 17),
+(18, 0, 0, 1, 0, '', 2, 48, 16, 17),
+(19, 0, 0, 1, 0, '', 2, 57, 17, 19),
+(20, 0, 0, 4, 0, '', 2, 49, 16, 19),
+(21, 0, 0, 1, 0, '', 2, 56, 17, 19),
+(22, 0, 0, 2, 0, '', 2, 48, 16, 19),
+(23, 0, 0, 1, 0, '', 2, 46, 16, 19),
+(24, 0, 0, 3, 0, '', 2, 42, 15, 16),
+(25, 0, 0, 1, 0, '', 2, 44, 15, 16),
+(26, 0, 0, 1, 0, '', 2, 40, 15, 16),
+(27, 0, 0, 2, 0, '', 2, 48, 16, 16),
+(28, 0, 0, 1, 0, '', 2, 49, 16, 16),
+(29, 0, 0, 12, 0, '', 3, 60, 18, 21),
+(30, 0, 0, 10, 0, '', 3, 59, 18, 21),
+(31, 0, 0, 2, 0, '', 3, 64, 21, 21),
+(32, 0, 0, 10, 0, '', 3, 63, 21, 21),
+(33, 0, 0, 11, 0, '', 3, 60, 18, 23),
+(34, 0, 0, 1, 0, '', 3, 59, 18, 23),
+(35, 0, 0, 12, 0, '', 3, 61, 20, 23),
+(36, 0, 0, 11, 0, '', 3, 62, 20, 23);
 
 -- --------------------------------------------------------
 
@@ -650,17 +711,17 @@ INSERT INTO `team_groups` (`id`, `pj`, `gf`, `gc`, `pts`, `pg`, `pe`, `pp`, `gro
 (10, 0, 0, 0, 0, 0, 0, 0, 4, 12, '2018-11-04 00:45:11', '2018-11-04 00:45:11'),
 (11, 0, 0, 0, 0, 0, 0, 0, 4, 9, '2018-11-04 00:45:11', '2018-11-04 00:45:11'),
 (12, 0, 0, 0, 0, 0, 0, 0, 4, 1, '2018-11-04 00:45:11', '2018-11-04 00:45:11'),
-(13, 0, 0, 0, 0, 0, 0, 0, 5, 17, '2018-11-05 09:38:24', '2018-11-15 06:11:32'),
-(14, 0, 0, 0, 0, 0, 0, 0, 5, 16, '2018-11-05 09:38:24', '2018-11-15 06:11:31'),
+(13, 0, 0, 0, 0, 0, 0, 0, 5, 17, '2018-11-05 09:38:24', '2018-11-15 11:42:38'),
+(14, 1, 3, 4, 0, 0, 0, 1, 5, 16, '2018-11-05 09:38:24', '2018-11-15 11:43:57'),
 (15, 0, 0, 0, 0, 0, 0, 0, 5, 15, '2018-11-05 09:38:24', '2018-11-15 06:12:00'),
-(16, 0, 0, 0, 0, 0, 0, 0, 5, 14, '2018-11-05 09:38:24', '2018-11-15 06:12:00'),
+(16, 1, 4, 3, 3, 1, 0, 0, 5, 14, '2018-11-05 09:38:24', '2018-11-15 11:43:57'),
 (17, 0, 0, 0, 0, 0, 0, 0, 6, 21, '2018-11-12 00:14:00', '2018-11-12 00:14:00'),
 (18, 0, 0, 0, 0, 0, 0, 0, 6, 20, '2018-11-12 00:14:00', '2018-11-12 00:14:00'),
 (19, 0, 0, 0, 0, 0, 0, 0, 6, 19, '2018-11-12 00:14:00', '2018-11-12 00:14:00'),
 (20, 0, 0, 0, 0, 0, 0, 0, 6, 18, '2018-11-12 00:14:00', '2018-11-12 00:14:00'),
-(21, 0, 0, 0, 0, 0, 0, 0, 7, 23, '2018-11-12 01:07:51', '2018-11-12 01:07:51'),
+(21, 0, 0, 0, 0, 0, 0, 0, 7, 23, '2018-11-12 01:07:51', '2018-11-15 12:36:54'),
 (22, 0, 0, 0, 0, 0, 0, 0, 7, 25, '2018-11-12 01:07:51', '2018-11-12 01:07:51'),
-(23, 0, 0, 0, 0, 0, 0, 0, 7, 29, '2018-11-12 01:07:52', '2018-11-12 01:07:52'),
+(23, 0, 0, 0, 0, 0, 0, 0, 7, 29, '2018-11-12 01:07:52', '2018-11-15 12:36:54'),
 (24, 0, 0, 0, 0, 0, 0, 0, 8, 22, '2018-11-12 01:08:09', '2018-11-12 01:08:09'),
 (25, 0, 0, 0, 0, 0, 0, 0, 8, 27, '2018-11-12 01:08:09', '2018-11-12 01:08:09'),
 (26, 0, 0, 0, 0, 0, 0, 0, 8, 31, '2018-11-12 01:08:09', '2018-11-12 01:08:09'),
@@ -670,8 +731,8 @@ INSERT INTO `team_groups` (`id`, `pj`, `gf`, `gc`, `pts`, `pg`, `pe`, `pp`, `gro
 (30, 0, 0, 0, 0, 0, 0, 0, 10, 28, '2018-11-12 01:08:48', '2018-11-12 01:08:48'),
 (31, 0, 0, 0, 0, 0, 0, 0, 10, 30, '2018-11-12 01:08:48', '2018-11-12 01:08:48'),
 (32, 0, 0, 0, 0, 0, 0, 0, 10, 33, '2018-11-12 01:08:48', '2018-11-12 01:08:48'),
-(33, 0, 0, 0, 0, 0, 0, 0, 11, 34, '2018-11-12 01:43:35', '2018-11-15 05:55:35'),
-(34, 0, 0, 0, 0, 0, 0, 0, 11, 38, '2018-11-12 01:43:35', '2018-11-15 05:55:17'),
+(33, 1, 10, 11, 0, 0, 0, 1, 11, 34, '2018-11-12 01:43:35', '2018-11-15 13:06:57'),
+(34, 1, 11, 10, 3, 1, 0, 0, 11, 38, '2018-11-12 01:43:35', '2018-11-15 13:06:57'),
 (35, 0, 0, 0, 0, 0, 0, 0, 11, 40, '2018-11-12 01:43:35', '2018-11-15 05:55:35'),
 (36, 0, 0, 0, 0, 0, 0, 0, 12, 35, '2018-11-12 01:43:55', '2018-11-15 05:56:46'),
 (37, 0, 0, 0, 0, 0, 0, 0, 12, 39, '2018-11-12 01:43:55', '2018-11-15 05:56:33'),
@@ -724,14 +785,14 @@ INSERT INTO `time_tables` (`id`, `date`, `hour`, `place`, `status`, `team_id_a`,
 (13, '2018-11-15', '14:10:00', 'Cancha de Fútbol', -1, 1, 9, NULL, 4),
 (14, '2018-11-15', '16:10:00', 'Cancha de Fútbol', -1, 9, 12, NULL, 4),
 (15, '2018-11-15', '11:25:00', 'Cancha multiple', -1, 14, 17, NULL, 5),
-(16, '2018-11-15', '11:50:00', 'Cancha multiple', -1, 15, 16, NULL, 5),
-(17, '2018-11-16', '08:30:00', 'Cancha multiple', -1, 14, 16, NULL, 5),
+(16, '2018-11-15', '11:50:00', 'Cancha multiple', 1, 15, 16, NULL, 5),
+(17, '2018-11-16', '08:30:00', 'Cancha multiple', 1, 14, 16, NULL, 5),
 (18, '2018-11-16', '08:55:00', 'Cancha multiple', -1, 15, 17, NULL, 5),
-(19, '2018-11-16', '11:50:00', 'Cancha multiple', -1, 16, 17, NULL, 5),
+(19, '2018-11-16', '11:50:00', 'Cancha multiple', 1, 16, 17, NULL, 5),
 (20, '2018-11-16', '12:15:00', 'Cancha multiple', -1, 14, 15, NULL, 5),
-(21, '2018-11-15', '12:15:00', 'Cancha multiple', -1, 18, 21, NULL, 6),
+(21, '2018-11-15', '12:15:00', 'Cancha multiple', 1, 18, 21, NULL, 6),
 (22, '2018-11-15', '12:40:00', 'Cancha multiple', -1, 19, 20, NULL, 6),
-(23, '2018-11-15', '13:55:00', 'Cancha multiple', -1, 18, 20, NULL, 6),
+(23, '2018-11-15', '13:55:00', 'Cancha multiple', 1, 18, 20, NULL, 6),
 (24, '2018-11-15', '14:20:00', 'Cancha multiple', -1, 19, 21, NULL, 6),
 (25, '2018-11-16', '10:35:00', 'Cancha multiple', -1, 20, 21, NULL, 6),
 (26, '2018-11-16', '10:10:00', 'Cancha de Fútbol', -1, 18, 19, NULL, 6),
@@ -747,7 +808,7 @@ INSERT INTO `time_tables` (`id`, `date`, `hour`, `place`, `status`, `team_id_a`,
 (36, '2018-11-15', '15:10:00', 'Cancha multiple', -1, 33, 28, NULL, 10),
 (37, '2018-11-16', '09:20:00', 'Cancha multiple', -1, 30, 28, NULL, 10),
 (38, '2018-11-16', '13:05:00', 'Cancha multiple', -1, 33, 30, NULL, 10),
-(40, '2018-11-15', '11:00:00', 'Cancha de Volley', -1, 38, 34, NULL, 11),
+(40, '2018-11-15', '11:00:00', 'Cancha de Volley', 1, 38, 34, NULL, 11),
 (41, '2018-11-15', '13:00:00', 'Cancha de Volley', -1, 40, 38, NULL, 11),
 (42, '2018-11-15', '14:30:00', 'Cancha de Volley', -1, 40, 34, NULL, 11),
 (43, '2018-11-15', '11:30:00', 'Cancha de Volley', -1, 39, 35, NULL, 12),
@@ -762,8 +823,8 @@ INSERT INTO `time_tables` (`id`, `date`, `hour`, `place`, `status`, `team_id_a`,
 (52, '2018-11-16', '13:50:00', 'Cancha de Fútbol', -1, 49, 50, 2, NULL),
 (53, '2018-11-16', '14:45:00', 'Cancha multiple', -1, 16, 15, 3, NULL),
 (54, '2018-11-16', '13:30:00', 'Cancha múltiple', -1, 53, 54, 4, NULL),
-(55, '2018-11-16', '13:55:00', 'Cancha múltiple', -1, 55, 56, 5, NULL),
-(56, '2018-11-16', '14:20:00', 'Cancha múltiple', -1, 57, 58, 5, NULL),
+(55, '2018-11-16', '13:55:00', 'Cancha múltiple', 1, 55, 56, 5, NULL),
+(56, '2018-11-16', '14:20:00', 'Cancha múltiple', 2, 57, 58, 5, NULL),
 (57, '2018-11-16', '15:10:00', 'Cancha múltiple', -1, 59, 60, 6, NULL),
 (58, '2018-11-16', '08:30:00', 'Cancha de Volley', -1, 61, 62, 7, NULL),
 (59, '2018-11-16', '08:30:00', 'Cancha de Volley', -1, 63, 64, 7, NULL),
@@ -826,16 +887,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `users_organization_id_foreign` (`organization_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `email_verified_at`, `password`, `rol`, `organization_id`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Daniel Guaycha', 'danielguaycha95@gmail.com', NULL, '$2y$10$qZAJlQc5xZuMvNp/3wrLkeSCYKCp.xZEdK39XCjApDdES4QaF/Y0i', 'member', 1, 'UkHlSHEbygi16EDrAlpt1WzOgmIb4bL0QwSROLJ9oCXsj3kcBzssuh8VeLjw', NULL, NULL),
-(2, 'Nixon Quezada', 'nxnqzd@gmail.com', NULL, '$2y$10$XbdbdHJjbBLQKhN6cgExu.uSXRKbGiyKnEjm2Zl.WaK8TBGLeNOU6', 'member', 1, NULL, NULL, NULL),
-(3, 'Erick Cañarte', 'ca.arte07@hotmail.com', NULL, '$2y$10$6jcOMOsXf0k3vjc09WFRruQXhuhLtekUwIOv26M5BleOOm6PKmXr6', 'member', 1, NULL, NULL, NULL);
+(1, 'Admin', 'admin@gmail.com', NULL, '$2y$10$ZFoS5uvdgb9DEXyWiqmin.MRWcYEaQOPiEFr5WpL2MwOpVCBiLIpe', 'member', 1, 'tZdpy9UUPfRWNQggpackE8vSoAmcXBT65mFyvwh7CHfSGopdgF0Z4saZ7Pzv', NULL, NULL),
+(2, 'Admin1', 'admin1@mail.com', NULL, '$2y$10$ZFoS5uvdgb9DEXyWiqmin.MRWcYEaQOPiEFr5WpL2MwOpVCBiLIpe', 'member', 1, 'jcg3YB32sYDOPvVVnuxtElQO6PDeM1TRC55TeCPUWL86Kc7eLjiJjhzD91xa', NULL, NULL),
+(3, 'Admin2', 'admin2@mail.com', NULL, '$2y$10$ZFoS5uvdgb9DEXyWiqmin.MRWcYEaQOPiEFr5WpL2MwOpVCBiLIpe', 'member', 1, NULL, NULL, NULL);
 
 --
 -- Restricciones para tablas volcadas
