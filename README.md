@@ -45,5 +45,5 @@ Si deseas probar el proyecto con una base de datos nueva y sin ningun registro, 
 
 ![Imgur](https://i.imgur.com/ZAgXPPN.png)
 ![Imgur](https://i.imgur.com/jddILkL.png)
-![Imgur](https://i.imgur.com/jddILkL.png)
+![Imgur](https://i.imgur.com/5kKE9yD.png)
 ![Imgur](https://i.imgur.com/kdjhUNA.png)
