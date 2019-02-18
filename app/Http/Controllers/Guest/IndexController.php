@@ -80,6 +80,7 @@ class IndexController extends Controller
             if ($grupos) {
                 $grupos_equipos = $this->_getGroups($grupos);
                 $grupos_fechas = $this->_getGroupsDate($ts->id);
+                
             }
 
         /****O T R O S  T O R N E O S***/
@@ -128,7 +129,6 @@ class IndexController extends Controller
         foreach ($grupos as $g){
             $ids[] = $g->id;
         }
-
         return TeamGroup::join('teams', 'teams.id', 'team_groups.team_id')
             ->whereIn('team_groups.group_id', $ids)
             ->select("team_groups.*", 'teams.name', 'teams.alias', 'teams.logo', 'teams.type')

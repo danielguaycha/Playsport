@@ -118,8 +118,9 @@
                                                         <div class="sa-date" >
                                                             <div class="sa-date-head">
                                                                 <span>{{ $tt->team_a }} vs {{ $tt->team_b }}</span>
-                                                                @if($tt->date)
+
                                                                     <div class="date">
+                                                                        @if($tt->date)
                                                                         <span>
                                                                         @switch($tt->status)
                                                                             @case(-2)
@@ -136,7 +137,7 @@
                                                                             @break;
                                                                         @endswitch
                                                                         </span>
-
+                                                                        @endif
                                                                         @auth
                                                                             <div class="buttons">
                                                                                 <button type="submit"
@@ -150,7 +151,7 @@
                                                                             </div>
                                                                         @endauth
                                                                     </div>
-                                                                @endif
+
                                                             </div>
                                                             <div class="sa-date-match">
                                                                 <div class="team">
@@ -265,6 +266,7 @@
                                                                     <tr>
                                                                         <td width="1%">{{ $i }}</td>
                                                                         <td class="table-img-logo">
+
                                                                             <img src="{{ asset($t->logo) }}" width="30px"/>
                                                                             <span class="movil-hide">{{ $t->name }}</span>
                                                                         </td>

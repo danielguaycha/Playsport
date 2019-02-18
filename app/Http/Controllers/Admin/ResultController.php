@@ -192,26 +192,29 @@ class ResultController extends Controller
 
         if ($rsa > $rsb){
             session()->flash("info", "Ganador Equipo A");
-            $this->_group_add_winner($rs->id, $ta, $request->result_a, $request->result_b);
-            $this->_group_add_loser($rs->id, $tb, $request->result_b, $request->result_a);
+            $this->_group_add_winner($rs->id, $ta, $request->result_a, $request->result_b, $request->group_id);
+            $this->_group_add_loser($rs->id, $tb, $request->result_b, $request->result_a, $request->group_id);
             return back();
         }else if($rsb > $rsa){
             session()->flash("info", "Ganador Equipo B");
-            $this->_group_add_winner($rs->id, $tb, $request->result_b, $request->result_a);
-            $this->_group_add_loser($rs->id, $ta, $request->result_a, $request->result_b);
+            $this->_group_add_winner($rs->id, $tb, $request->result_b, $request->result_a, $request->group_id);
+            $this->_group_add_loser($rs->id, $ta, $request->result_a, $request->result_b, $request->group_id);
             return back();
         }else if($rsa == $rsb){
-            $this->_group_add_tied($rs->id, $ta, $request->result_a, $request->result_b);
-            $this->_group_add_tied($rs->id, $tb, $request->result_b, $request->result_a);
+            $this->_group_add_tied($rs->id, $ta, $request->result_a, $request->result_b, $request->group_id);
+            $this->_group_add_tied($rs->id, $tb, $request->result_b, $request->result_a, $request->group_id);
             session()->flash("info", "Partido Empatado");
             return back();
         }
     }
 
     // Define winner
-    private function _group_add_winner($time_table, $team_id, $goals, $contra){
+    private function _group_add_winner($time_table, $team_id, $goals, $contra, $group_id=null){
 
-        $ga = TeamGroup::where('team_id', $team_id);
+        $ga = TeamGroup::where([
+            ['team_id', $team_id],
+            ['group_id', $group_id]
+        ]);
 
         $gc = new GroupControl();
         $gc->pj = 1;
@@ -232,8 +235,11 @@ class ResultController extends Controller
     }
 
     // Define loser
-    private function _group_add_loser($time_table, $team_id, $goals, $contra){
-        $ga = TeamGroup::where('team_id', $team_id);
+    private function _group_add_loser($time_table, $team_id, $goals, $contra, $group_id=null){
+        $ga = TeamGroup::where([
+            ['team_id', $team_id],
+            ['group_id', $group_id]
+        ]);
 
         $gc = new GroupControl();
         $gc->pj = 1;
@@ -252,8 +258,11 @@ class ResultController extends Controller
     }
 
     // Define tied match
-    private function _group_add_tied($time_table, $team_id, $goals, $contra){
-        $ga = TeamGroup::where('team_id', $team_id);
+    private function _group_add_tied($time_table, $team_id, $goals, $contra, $group_id=null){
+        $ga = TeamGroup::where([
+            ['team_id', $team_id],
+            ['group_id', $group_id]
+        ]);
 
         $gc = new GroupControl();
         $gc->pj = 1;
