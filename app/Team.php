@@ -8,6 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class Team extends Model
 {
     protected $fillable =  [
-        'name','alias','type', 'logo', 'organization_id', 'sport_id'
+        'name','alias','type', 'logo', 'tournament_id', 'sport_id',
     ];
 }

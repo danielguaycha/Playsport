@@ -16,6 +16,7 @@ class InstallSeeder extends Seeder
             'name'=> 'OrganizationName',
             'logo'=>'logo.png'
         ]);
+
         DB::table('users')->insert([
             [
                 'name'=> 'Admin 1',

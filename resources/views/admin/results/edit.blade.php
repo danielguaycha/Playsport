@@ -29,18 +29,7 @@
                 <div class="row">
                     <div class="col">
                         <h6>Equipo A | {{ $time_tables->team_a }}</h6>
-                        @if($time_tables->type_a == 'Male')
-                            <img src="{{ Avatar::create($time_tables->alias_a)
-                                            ->setDimension(200)
-                                            ->setFontSize(72)
-                                            ->setBackground($time_tables->logo_a)->toBase64() }}" width="60px"/>
-                        @else
-                            <img src="{{ Avatar::create($time_tables->alias_a)
-                                                ->setBorder(5, "#C2185B")
-                                                ->setDimension(200)
-                                                ->setFontSize(72)
-                                                ->setBackground($time_tables->logo_a)->toBase64() }}" width="60px"/>
-                        @endif
+                        <img src="{{ asset($time_tables->logo_a) }}" alt="" width="60px">
                     </div>
                 </div>
             </div>
@@ -50,18 +39,7 @@
                 <div class="row">
                     <div class="col">
                         <h6>Equipo B | {{ $time_tables->team_b }}</h6>
-                        @if($time_tables->type_b == 'Male')
-                            <img src="{{ Avatar::create($time_tables->alias_b)
-                                            ->setDimension(200)
-                                            ->setFontSize(72)
-                                            ->setBackground($time_tables->logo_b)->toBase64() }}" width="60px"/>
-                        @else
-                            <img src="{{ Avatar::create($time_tables->alias_b)
-                                                ->setBorder(5, "#C2185B")
-                                                ->setDimension(200)
-                                                ->setFontSize(72)
-                                                ->setBackground($time_tables->logo_b)->toBase64() }}" width="60px"/>
-                        @endif
+                        <img src="{{ asset($time_tables->logo_b) }}" alt="" width="60px">
                     </div>
                 </div>
 

@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'UTMACH - PlaySport'),
+    'name' => env('APP_NAME', 'AdminSport'),
 
     /*
     |--------------------------------------------------------------------------
@@ -163,6 +163,7 @@ return [
         /*
          * Package Service Providers...
          */
+         Barryvdh\Debugbar\ServiceProvider::class,
 
         /*
          * Application Service Providers...

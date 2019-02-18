@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Team;
 use Illuminate\Support\Facades\Auth;
+use Laravolt\Avatar\Facade as Avatar;
 
 class TeamController extends Controller
 {
@@ -26,31 +27,14 @@ class TeamController extends Controller
 
     public function index(Request $request)
     {
-        if ($request->query("sport") && $request->query("type")){
+        if($request->query('tournament')){
             $con = [
-                ['organization_id', Auth::user()->organization_id],
-                ['sport_id', $request->query('sport')],
-                ['type', $request->query('type')],
                 ['status', 1],
-            ];
-        }
-        elseif ($request->query('sport')){
-            $con = [
-                ['organization_id', Auth::user()->organization_id],
-                ['sport_id', $request->query('sport')],
-                ['status', 1],
-            ];
-        }
-        elseif ($request->query("type")){
-            $con = [
-                ['organization_id', Auth::user()->organization_id],
-                ['type', $request->query('type')],
-                ['status', 1],
+                ['tournament_id', $request->query('tournament')]
             ];
         }
         else{
             $con = [
-                ['organization_id', Auth::user()->organization_id],
                 ['status', 1],
             ];
         }
@@ -71,17 +55,30 @@ class TeamController extends Controller
             $newTeams[] = $t;
         }
 
+        $tournaments = Tournament::where([
+            ['status', '<>', -1]
+        ])->select('id', 'name')->orderBy('priority', 'asc')->get();
+
         return view('admin.teams.index',[
             'Team' => $newTeams,
-            'sports'=> $s
+            'sports'=> $s,
+            'tournaments'=> $tournaments
         ]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        if ($request->query("tournament"))
+            $tournaments = Tournament::where('id', $request->query('tournament'))->get();
+        else
+            $tournaments = Tournament::where('status', '<>', -1)->get();
+
         $sport = Sport::all();
-        $t = Team::select('logo', 'alias')->distinct('alias')->get();
-        return view('admin.teams.create')->with(['sports' => $sport, 'colors'=> $t]);
+
+        return view('admin.teams.create')->with([
+            'sports' => $sport,
+            'tournaments'=> $tournaments,
+        ]);
     }
 
     public function store(Request $request)
@@ -89,20 +86,32 @@ class TeamController extends Controller
         $request->validate([
             'name' => 'required|max:100',
             'type' => 'required',
-            'sport'=> 'required'
+            'sport'=> 'required',
+            'tournament_id'=> 'required',
         ]);
-
+        $admin = new AdminController();
         $team = new Team();
 
-        $team -> name = $request->get('name');
-        $team -> type = $request->get('type');
-        $team -> organization_id = Auth::user()->organization_id;
-        $team -> logo = $request->get('logo');
+        $team->name = $request->get('name');
+        $team->type = $request->get('type');
+        $team->tournament_id = $request->tournament_id;
         $team->alias = $request->get("alias");
-        $team -> sport_id = $request->get('sport');
+        $team->color = $request->get('color');
+        $team->sport_id = $request->get('sport');
         $team->status = 1;
-
-
+        if($request->logo) {
+            $team->logo = $admin->uploadImage($request->file('logo'), 'img/teams', ['width'=>100, 'height'=> 100]);
+        }else {
+            $team->logo= 'img/teams/'.time().'.png';
+            if (!$request->alias)
+                Avatar::create($team->name)->setDimension(100)
+                    ->setBackground($team->color)
+                    ->save($team->logo);
+            else
+                Avatar::create($team->alias)->setDimension(100)
+                    ->setBackground($team->color)
+                    ->save($team->logo);
+        }
         $team-> save();
         session()->flash("success", "Equipo guardado con exito");
 
@@ -150,8 +159,26 @@ class TeamController extends Controller
         $t->name = $request->name;
         $t->alias = $request->alias;
         $t->type = $request->type;
+        $t->color = $request->color;
         $t->sport_id = $request->sport;
-        $t-> logo = $request->get('logo');
+
+        if($request->change){
+            $admin = new AdminController();
+            $admin->removeImage($t->logo);
+            if ($request->hasFile('logo')){
+                $t->logo = $admin->uploadImage($request->file('logo'), 'img/teams', ['width'=>100, 'height'=> 100]);
+            }else{
+                $t->logo= 'img/teams/'.time().'.png';
+                if (!$request->alias)
+                    Avatar::create($t->name)->setDimension(100)
+                        ->setBackground($t->color)
+                        ->save($t->logo);
+                else
+                    Avatar::create($t->alias)->setDimension(100)
+                        ->setBackground($t->color)
+                        ->save($t   ->logo);
+            }
+        }
 
         $t->save();
         session()->flash("success", "Datos actualizados con exito");

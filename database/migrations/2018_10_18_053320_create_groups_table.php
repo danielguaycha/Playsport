@@ -17,6 +17,8 @@ class CreateGroupsTable extends Migration
             $table->increments('id');
             $table->string("name", 100);
             $table->integer("status")->default(1);
+            $table->string('class', 50)->nullable()->comment('Tipo de grupo : Liga | FaseGrupos');
+            $table->integer('classification_num')->default(0);
 
             $table->integer("tournament_id")->unsigned();
             $table->foreign("tournament_id")->references("id")->on("tournaments");

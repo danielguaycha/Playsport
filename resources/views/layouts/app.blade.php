@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'SportPlay') }}</title>
+    <title>{{ config('app.name', 'SportAdmin') }}</title>
 
     <!-- Scripts -->
     {{--<script src="{{ asset('js/app.js') }}" defer></script>--}}
@@ -24,64 +24,20 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="{{ asset("css/bootstrap.min.css") }}">
     <link rel="stylesheet" href="{{asset("css/all.min.css")}}">
+    <link rel="stylesheet" href="{{asset("css/jquery.toast.min.css")}}">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
 
     <!-- Styles -->
     {{--<link href="{{ asset('css/app.css') }}" rel="stylesheet">--}}
-    <style>
-        .sp-title {
-            display: flex;
-            justify-content: space-between;
-            flex-direction: column;
-            align-items: center;
-        }
-        .sp-title div {
-            display: flex;
-            flex-direction: column;
-            align-items: initial;
-            margin-bottom: 1rem;
-        }
-        .sp-title div a {
-            margin-right: 1rem;
-            min-width: 3rem;
-        }
-        .sp-title div form {
-            margin-top: 1rem;
-        }
-        .sp-title div form button {
-            margin: 0 auto;
-        }
-        @media screen and (min-width: 768px) {
-            .sp-title {
-                flex-direction: row;
-                align-items: baseline;
-            }
-            .sp-title div {
-                align-items: baseline;
-                flex-direction: row;
-                margin-bottom: 0;
-            }
-        }
-
-        .sp-arrows {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            height: 100%;
-            align-items: center;
-        }
-        .sp-arrows button:nth-child(1) {
-            margin-bottom: 1rem;
-        }
-    </style>
     @yield('style')
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ route('home') }}">
                     <img src="http://www.utmachala.edu.ec/portalwp/wp-content/uploads/2015/08/LOGO_OUT.png" width="30" height="30" class="d-inline-block align-top" alt="">
-                    {{ config('app.name', 'SportPlay') }}
+                    {{ config('app.name', 'SportAdmin') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -93,10 +49,13 @@
                         @auth
 
                             <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Crear Torneo
+                                <a class="nav-link" href="{{ route("tournament.index") }}">
+                                    Torneos
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                {{--<a class="nav-link dropdown-toggle" href="{{ route("tournament.index") }}" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Torneos
+                                </a>--}}
+                                {{--<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                     <h6 class="dropdown-header">1. Registrar Torneo</h6>
                                     <a href="{{ route("tournament.index") }}"
                                        class="dropdown-item">Nuevo Torneo</a>
@@ -108,7 +67,7 @@
                                     <h6 class="dropdown-header">3. Calendario</h6>
                                     <a class="dropdown-item"
                                        href="{{route('timetable.create')}}">Definir fechas</a>
-                                </div>
+                                </div>--}}
                             </li>
                             <li class="nav-item">
 
@@ -119,7 +78,7 @@
                             </li>
 
                             <li class="nav-item">
-                                <a href="{{ route('page.index') }}" class="nav-link">Paginas</a>
+                                <a href="{{ route('page.index') }}" class="nav-link">Páginas</a>
                             </li>
                             {{--<li class="nav-item">
                                 <a href="{{ route('player.index') }}" class="nav-link">Jugadores</a>
@@ -185,54 +144,43 @@
             @yield('content')
         </main>
     </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="{{ asset('js/jquery.toast.min.js') }}"></script>
+    <script>
+        function ok(msg){
+            $.toast({
+                heading: 'Bien',
+                text: msg,
+                showHideTransition: 'slide',
+                icon: 'success',
+                position: 'bottom-right',
+                loader: false
+            })
+        }
+        $('.open-window').click(function (e) {
+            e.preventDefault();
+            window.open($(this).attr('href'), "Add", "width=800,height=600");
+        });
+        $('.btn-tooltip').tooltip();
+        $('.form-confirm').submit(function (e) {
+            e.preventDefault();
+            let msg ="";
+            if($(this).data('msg')){
+                msg = $(this).data('msg');
+            }else{
+                msg ="¿Estás seguro de realizar esta operación?";
+            }
 
+            let c = confirm(msg);
+            if(c) {
+                document.getElementById($(this).attr('id')).submit();
+            }
+
+        })
+    </script>
     @yield('script')
 
-    <script>
-        document.addEventListener("DOMContentLoaded", ()=>{
-            document.querySelector('.navbar-toggler').addEventListener('click', responsiveMenu);
-            document.querySelector('html').addEventListener('click', (e)=>{
-                if (e.srcElement.classList.contains("dropdown-toggle")){
-                    e.preventDefault();
-                    openDrop(e.srcElement.parentElement)
-                }
-                else{
-                    document.querySelector('.navbar-collapse').classList.remove('show');
-                    closeDrop();
-                }
-            })
-        });
-
-        function responsiveMenu(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            let nav = this.parentElement.querySelector('.navbar-collapse');
-            if (nav.classList.contains('show')){
-                nav.classList.remove('show');
-            }else{
-                nav.classList.add('show');
-            }
-        }
-
-        function openDrop(submenu){
-
-            submenu = submenu.querySelector('.dropdown-menu');
-            if (submenu.classList.contains('show')) {
-                submenu.classList.remove('show');
-            }
-            else {
-                closeDrop();
-                submenu.classList.add('show');
-            }
-        }
-
-        function closeDrop(){
-            let menu = document.getElementsByClassName('dropdown-menu');
-            for (let i=0; i<menu.length; i++){
-                if (menu[i].classList.contains("show"))
-                    menu[i].classList.remove("show");
-            }
-        }
-    </script>
 </body>
 </html>

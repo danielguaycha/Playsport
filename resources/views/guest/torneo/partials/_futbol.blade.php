@@ -1,5 +1,6 @@
 <section class="widget-nav">
     {{--FUTBOL--}}
+
     @if($tournament->sports_id == 1)
         <div class="widget-nav-logo">
             <i class="fa fa-futbol"></i>
@@ -69,5 +70,6 @@
             </ul>
         </div>
     @endif
+
 </section>
 

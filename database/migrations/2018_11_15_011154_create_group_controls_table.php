@@ -26,8 +26,8 @@ class CreateGroupControlsTable extends Migration
             $table->integer("team_group_id")->unsigned();
             $table->integer('team_id');
 
-            $table->foreign('time_table_id')->references("id")->on("time_tables");
-            $table->foreign('team_group_id')->references("id")->on("team_groups");
+            $table->foreign('time_table_id')->references("id")->on("time_tables")->onDelete('cascade');
+            $table->foreign('team_group_id')->references("id")->on("team_groups")->onDelete('cascade');
         });
     }
 

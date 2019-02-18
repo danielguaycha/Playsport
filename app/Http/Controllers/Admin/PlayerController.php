@@ -72,10 +72,14 @@ class PlayerController extends Controller
         $players->organization_id = Auth::user()->organization_id;
         $players -> save();
 
-        $pt = new PlayerTeam();
-        $pt->team_id = $request->team_id;
-        $pt->player_id = $players->id;
-        $pt->save();
+        if($players && $players->id>0) {
+
+            PlayerTeam::create(['player_id'=> $players->id, 'team_id'=> $request->team_id]);
+            /*$pt = new PlayerTeam();
+            $pt->team_id = $request->team_id;
+            $pt->player_id = $players->id;
+            $pt->save();*/
+        }
 
         session()->flash('success', 'Jugador '.$players->name.' agregado correctamente!') ;
         return back();

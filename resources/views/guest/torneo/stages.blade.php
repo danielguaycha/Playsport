@@ -16,6 +16,7 @@
                         @php
                             $i = 1;
                         @endphp
+
                         @foreach($stages as $s)
                             <div class="team_{{$i}} group-team">
                                 <a @auth href="{{ route("stage.result", ['stage'=> $s->stage_id]) }}" @endauth class="">
@@ -39,13 +40,8 @@
                                                     @endif
                                                 @endif
                                         >
-                                            @if($s->type_a == 'Male')
-                                                <img src="{{ Avatar::create($s->alias_a)->setBackground($s->logo_a)->toBase64() }}" width="30px"/>
-                                            @else
-                                                <img src="{{ Avatar::create($s->alias_a)
-                                            ->setBorder(5, "#C2185B")
-                                            ->setBackground($s->logo_a)->toBase64() }}" width="30px"/>
-                                            @endif
+
+                                            <img src="{{ asset($s->logo_a) }}" width="30px"/>
                                             <span>{{ $s->team_a }}</span>
                                             <div>{{ $s->result_a==null?'0':$s->result_a }}</div>
                                         </div>
@@ -67,13 +63,8 @@
                                                 @endif
                                                 @endif
                                         >
-                                            @if($s->type_b== 'Male')
-                                                <img src="{{ Avatar::create($s->alias_b)->setBackground($s->logo_b)->toBase64() }}" width="30px"/>
-                                            @else
-                                                <img src="{{ Avatar::create($s->alias_b)
-                                            ->setBorder(5, "#C2185B")
-                                            ->setBackground($s->logo_b)->toBase64() }}" width="30px"/>
-                                            @endif
+
+                                            <img src="{{ asset($s->logo_b) }}" width="30px"/>
                                             <span>{{ $s->team_b }}</span>
                                             <div>{{ $s->result_b==null?'0':$s->result_b }}</div>
                                         </div>
@@ -153,13 +144,8 @@
                                                 class="team"
                                             @endif
                                     >
-                                        @if($s->type_a == 'Male')
-                                            <img src="{{ Avatar::create($s->alias_a)->setBackground($s->logo_a)->toBase64() }}" width="30px"/>
-                                        @else
-                                            <img src="{{ Avatar::create($s->alias_a)
-                                            ->setBorder(5, "#C2185B")
-                                            ->setBackground($s->logo_a)->toBase64() }}" width="30px"/>
-                                        @endif
+
+                                        <img src="{{ asset($s->logo_a)  }}" width="30px"/>
                                         <span>{{$s->team_a}}</span>
                                         <div>{{ $s->result_a==null?'0': $s->result_a}}</div>
                                     </div>
@@ -208,13 +194,8 @@
                                                 class="team"
                                             @endif
                                     >
-                                        @if($s->type_b == 'Male')
-                                            <img src="{{ Avatar::create($s->alias_a)->setBackground($s->logo_a)->toBase64() }}" width="30px"/>
-                                        @else
-                                            <img src="{{ Avatar::create($s->alias_b)
-                                            ->setBorder(5, "#C2185B")
-                                            ->setBackground($s->logo_b)->toBase64() }}" width="30px"/>
-                                        @endif
+
+                                        <img src="{{ asset($s->logo_b) }}" width="30px"/>
                                         <span>{{$s->team_b}}</span>
                                         <div>{{ $s->result_b==null?'0': $s->result_b }}</div>
                                     </div>

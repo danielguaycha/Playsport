@@ -12,6 +12,7 @@ use App\Tournament;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Laravolt\Avatar\Facade as Avatar;
 
 class StageController extends Controller
 {
@@ -37,10 +38,14 @@ class StageController extends Controller
             ->orderBy('gd', 'desc')
             ->get();
 
+        $teams = Team::where('tournament_id', $s[0]->tournament_id)->get();
+
+
         return view('admin.stages.edit', [
             'stage'=> $s,
             'groups'=> $g,
-            'stats'=> $stats
+            'stats'=> $stats,
+            'teams'=> $teams
         ]);
     }
 
@@ -104,7 +109,51 @@ class StageController extends Controller
         //
     }
 
-    public function create(Request $request)
+    public function create(Request $request){
+
+        # Verificación del Torneo
+        if (!$request->query('tournament'))
+            abort(404);
+        $t = Tournament::find($request->query('tournament'));
+        if(!$t)
+            abort(404);
+
+        $stages = Stage::where([
+            ['tournament_id', $t->id],
+            ['parent', 0]
+        ])->count();
+
+        if($stages>0) {
+            session()->flash('warning','Ya has creado una eliminatoria');
+            return back();
+        }
+        # Verificación del tipo
+        if($request->query('type')){
+            $num = intval($request->query('type'));
+            if(!$num)
+                return back();
+
+            $teams = Team::where([
+                ['tournament_id', $t->id],
+                ['status', '<>', -1]
+            ])->get();
+
+
+            return view('admin.tournament.stages.stage',[
+                'tournament'=> $t,
+                'teams'=> $teams,
+                'num'=> ($num*2)
+            ]);
+        }
+
+
+        return view('admin.tournament.stages.stage', [
+            'tournament'=> $t
+        ]);
+
+    }
+
+    public function create2(Request $request)
     {
         if(!$request->query('tournament')) {
             $t = Tournament::where([
@@ -144,7 +193,7 @@ class StageController extends Controller
         }
     }
 
-    public function store(Request $request)
+    public function store2(Request $request)
     {
         if (!$request->has("name") || !$request->has("tournament_id") || !$request->has("match_num")){
             session()->flash("warning", "El nombre, número de encuentros  y torneo son obligatorios");
@@ -166,41 +215,121 @@ class StageController extends Controller
 
     }
 
-    public function show($id)
-    {
-        //
+    public function store(Request $request){
+        $tier = [8=>'Octavos de Final', 4=>'Cuartos de Final', 2=>'SemiFinal', 1=>'Final'];
+        $team_num = count($request->to_team);
+        if($request->num == $team_num){
+            $vs = array();
+            for ($i=1; $i<=($team_num/2); $i++){
+                $vs[] = [$request->to_team[$i-1], $request->to_team[$team_num-$i]];
+            }
+
+            if(count($vs)>0){
+                $last = 0; // para tomar el padre
+                $i=0; // contador para validar el primer Stage
+                $first = 0; // para guardar el primer Stage
+                foreach ($tier as $key => $t){
+                    if($key <= ($request->num/2)) {
+
+                        $st = new Stage();
+                        $st->name = $t;
+                        $st->match_num = $key;
+                        $st->desc = 'Etapa de ' . $t;
+                        $st->tournament_id = $request->tournament_id;
+                        $st->parent = $last;
+                        $st->status = 0;
+                        $st->save();
+
+                        if ($i==0)
+                            $first = $st->id;
+
+                        $last = $st->id;
+                        $i++;
+                    }
+                }
+
+                if ($first>0){ # Guardando las fechas
+                    foreach($vs as $v){
+                        $tt = new TimeTable();
+                        $tt->team_id_a = $v[0];
+                        $tt->team_id_b = $v[1];
+                        $tt->stage_id = $first;
+                        $tt->save();
+                    }
+                }
+                # semifinal
+                $torneo = Tournament::find($request->tournament_id);
+                if ($team_num ==4){
+                    $teams_new = array();
+                    for ($i=1; $i<=2; $i++){
+                        $tn = new Team();
+                        $tn->name = 'Ganador #'.$i;
+                        $tn->tournament_id = $torneo->id;
+                        $tn->type = $torneo->type;
+                        $tn->sport_id = $torneo->sports_id;
+                        $tn->status = -1;
+                        $tn->logo= 'img/teams/'.time().'.png';
+
+                        Avatar::create($tn->name)->setDimension(100)
+                            ->save($tn->logo);
+                        $tn->save();
+                        $teams_new[] = $tn->id;
+                    }
+                    $tt = new TimeTable();
+                    $tt->team_id_a = $teams_new[0];
+                    $tt->team_id_b = $teams_new[1];
+                    $tt->stage_id = $last;
+                    $tt->save();
+                }
+
+                return redirect(route('tournament.show', ['id'=> $request->tournament_id]));
+            }
+
+        }else{
+            session()->flash('warning', 'Necesitas '.$request->num.' equipos para poder crear esta eliminatoria');
+            return back();
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function show($tournament_id)
+    {
+        $stage = Stage::join('time_tables as tt', 'stages.id', 'tt.stage_id')
+            ->join('teams as a', 'a.id', 'tt.team_id_a')
+            ->join('teams as b', 'b.id', 'tt.team_id_b')
+            ->leftJoin('results', 'results.time_table_id', 'tt.id')
+            ->select('tt.*','stages.id as stage_id','stages.name as stage', 'stages.parent', 'stages.id as stage_id',
+                'a.name as team_a', 'a.alias as alias_a', 'a.type as type_a', 'a.logo as logo_a',
+                'b.name as team_b', 'b.alias as alias_b', 'b.type as type_b', 'b.logo as logo_b',
+                'results.result_a', 'results.result_b', 'results.penal_a', 'results.penal_b')
+            ->where('stages.tournament_id', $tournament_id)
+            ->orderBy('stages.parent', 'asc')
+            ->orderBy('tt.hour', 'asc')
+            ->get();
+        return view('admin.tournament.stages.stage-show', [
+            'stages'=> $stage,
+            'tournament_id'=> $tournament_id
+        ]);
+    }
+
     public function edit($id)
     {
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
+    }
+
+    public function destroy_all($tournament_id){
+        $t = Stage::where([
+            ['tournament_id', $tournament_id],
+        ])->delete();
+        session()->flash('success', 'Eliminatoria removida con éxito');
+        return back();
     }
 }

@@ -26,7 +26,7 @@ class CreateResultsTable extends Migration
             $table->string("desc", 250)->nullable();
 
             $table->integer("time_table_id")->unsigned();
-            $table->foreign("time_table_id")->references("id")->on("time_tables");
+            $table->foreign("time_table_id")->references("id")->on("time_tables")->onDelete('cascade');
         });
     }
 

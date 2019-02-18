@@ -31,7 +31,7 @@ class CreateStatsTable extends Migration
             $table->foreign("tournament_id")->references("id")->on("tournaments");
             $table->foreign("player_id")->references("id")->on("players");
             $table->foreign("team_id")->references("id")->on("teams");
-            $table->foreign("time_table_id")->references("id")->on("time_tables");
+            $table->foreign("time_table_id")->references("id")->on("time_tables")->onDelete('cascade');
         });
     }
 

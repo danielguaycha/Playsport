@@ -25,10 +25,11 @@ class TorneoController extends Controller
             ['type', 'tournament'],
             ['parent', $t->id]
         ])->select('title', 'url')->get();
-        if (($t->count())==0) {abort(404);}
+
+
 
         $g = Group::where('tournament_id', $t->id)->get();
-        if (($g->count())==0){abort(404);}
+
 
         $tg = TeamGroup::join('teams', 'teams.id', 'team_groups.team_id')
             ->select("team_groups.*", 'teams.name', 'teams.alias', 'teams.logo', 'teams.type')
@@ -94,7 +95,10 @@ class TorneoController extends Controller
             ['parent', $t->id]
         ])->select('title', 'url')->get();
 
-        $g = Group::where('tournament_id', $t->id);
+        $g = Group::where([
+            ['tournament_id', $t->id],
+            ['class', 'group']
+        ]);
 
         $tt = TimeTable::join('groups', 'groups.id', 'time_tables.group_id')
             ->join('teams as a', 'a.id', 'time_tables.team_id_a')
@@ -106,16 +110,44 @@ class TorneoController extends Controller
                 'b.name as team_b', 'b.alias as alias_b', 'b.type as type_b', 'b.logo as logo_b',
                 'results.result_a', 'results.result_b');
 
-        if (!$request->query('order')) {
-            $tt = $tt->orderBy('date', 'asc')
-                ->orderBy('hour', 'asc')
+
+        $tt = $tt->orderBy('groups.name', 'asc')
+            ->orderBy('date', 'asc')
+            ->orderBy('hour', 'asc')
+            ->get();
+
+        /*Liguilla*/
+
+        $league = Group::where([
+            ['tournament_id', $t->id],
+            ['class', 'league']
+        ])->first();
+
+        $r = array();
+        $tt2 = array();
+
+        if ($league) {
+
+            $r = TimeTable::join('rounds', 'rounds.id', 'time_tables.round_id')
+                ->where('time_tables.group_id', $league->id)
+                ->select('rounds.id', 'rounds.name', 'rounds.status')
+                ->distinct()
                 ->get();
-        }else{
-            $tt = $tt->orderBy('groups.name', 'asc')
-                ->orderBy('date', 'asc')
-                ->orderBy('hour', 'asc')
+
+            $tt2 = TimeTable::leftJoin('teams as a', 'a.id', 'time_tables.team_id_a')
+                ->leftJoin('teams as b', 'b.id', 'time_tables.team_id_b')
+                ->leftJoin('results', 'results.time_table_id', 'time_tables.id')
+                ->where([
+                    ['time_tables.group_id', $league->id]
+                ])
+                ->select('time_tables.*',
+                    'a.name as team_a', 'a.id as team_a_id', 'a.logo as logo_a',
+                    'b.name as team_b', 'b.id as team_b_id', 'b.logo as logo_b'
+                )
+                ->orderBy('time_tables.round_id')
                 ->get();
         }
+
        // dd($tt);
         return view('guest.torneo.times', [
             'tournament'=> $t,
@@ -123,6 +155,9 @@ class TorneoController extends Controller
             'pages'=> $p,
             'groups'=> $g->get(),
             'groups_num'=> $g->count(),
+            'league'=> $league,
+            'rounds'=> $r,
+            'time_tables'=> $tt2
         ]);
     }
 
@@ -146,11 +181,12 @@ class TorneoController extends Controller
 
     public function show_stage($id){
         $t = $this->_get_tournament($id);
+
         $stage = Stage::join('time_tables as tt', 'stages.id', 'tt.stage_id')
             ->join('teams as a', 'a.id', 'tt.team_id_a')
             ->join('teams as b', 'b.id', 'tt.team_id_b')
             ->leftJoin('results', 'results.time_table_id', 'tt.id')
-            ->select('tt.*','stages.name as stage', 'stages.parent', 'stages.id as stage_id',
+            ->select('tt.*','stages.id as stage_id','stages.name as stage', 'stages.parent', 'stages.id as stage_id',
                 'a.name as team_a', 'a.alias as alias_a', 'a.type as type_a', 'a.logo as logo_a',
                 'b.name as team_b', 'b.alias as alias_b', 'b.type as type_b', 'b.logo as logo_b',
                 'results.result_a', 'results.result_b', 'results.penal_a', 'results.penal_b')
@@ -158,6 +194,7 @@ class TorneoController extends Controller
             ->orderBy('stages.parent', 'asc')
             ->orderBy('tt.hour', 'asc')
             ->get();
+
 
         $p = Page::where([
             ['type', 'tournament'],

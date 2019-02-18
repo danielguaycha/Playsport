@@ -15,7 +15,7 @@ class CreateStageControlsTable extends Migration
             $table->integer("time_table_id")->unsigned();
             $table->string("team", 15);
 
-            $table->foreign("time_table_id")->references("id")->on("time_tables");
+            $table->foreign("time_table_id")->references("id")->on("time_tables")->onDelete('cascade');
         });
     }
 

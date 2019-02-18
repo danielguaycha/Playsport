@@ -1,6 +1,10 @@
 /node_modules
 /public/hot
 /public/storage
+/public/img/postponed
+/public/img/teams
+/public/img/tournaments
+/frontend/node_modules
 /storage/*.key
 /vendor
 /.idea

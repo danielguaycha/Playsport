@@ -10,26 +10,19 @@
                <form class="form-inline m-xl-4">
                    <div class="form-group">
                        <div class="form-group">
-                           <select class="form-control-sm" name="sport" >
-                               <option selected value="">Todos los deportes...</option>
-                              @foreach($sports as $s)
-                                  @if(request()->query("sport"))
-                                        @if(request()->query('sport') == $s->id)
-                                           <option selected value="{{ $s->id }}">{{ $s->name }}</option>
-                                        @else
-                                           <option value="{{ $s->id }}">{{ $s->name }}</option>
-                                        @endif
-                                  @else
-                                       <option value="{{ $s->id }}">{{ $s->name }}</option>
-                                  @endif
-                              @endforeach
-                           </select>
-                       </div>
-                       <div class="form-group">
-                           <select class="form-control-sm" name="type">
-                               <option selected value="">Todos los generos</option>
-                               <option value="Male">Masculino</option>
-                               <option value="Female">Femenino</option>
+                           <select name="tournament" class="form-control form-control-sm">
+                               <option selected value="">Todos los torneos...</option>
+                               @foreach($tournaments as $t)
+                                   @if(request()->query("tournament"))
+                                       @if(request()->query("tournament") != $t->id)
+                                           <option value="{{ $t->id }}">{{ $t->name }}</option>
+                                       @else
+                                           <option value="{{ $t->id }}" selected>{{ $t->name }}</option>
+                                       @endif
+                                   @else
+                                       <option value="{{ $t->id }}">{{ $t->name }}</option>
+                                   @endif
+                               @endforeach
                            </select>
                        </div>
                        <div class="form-group">
@@ -37,7 +30,8 @@
                        </div>
                    </div>
                </form>
-               <a href="{{route("team.create")}}" class="btn btn-dark btn-sm"><i class="fa fa-plus"></i></a>
+               <a href="{{route("team.create")}}"
+                  class="btn btn-dark btn-sm"><i class="fa fa-plus"></i></a>
            </div>
         </div>
         <div class="table-responsive">
@@ -54,20 +48,12 @@
                </tr>
            </thead>
             <tbody>
-            @foreach($Team as $team)
+                @foreach($Team as $team)
 
                 <tr>
                     <td> {{$team -> id}} </td>
                     <td class="d-none d-md-block">
-                            @if($team->type == 'Male')
-                                <img src="{{ Avatar::create($team->alias)
-                                                    ->setBorder(5, $team->logo)
-                                                    ->setBackground($team->logo)->toBase64() }}" width="30px"/>
-                            @else
-                                <img src="{{ Avatar::create($team->alias)
-                                                ->setBorder(5, "#C2185B")
-                                                ->setBackground($team->logo)->toBase64() }}" width="30px"/>
-                            @endif
+                        <img src="{{ asset($team->logo)  }}" width="30px"/>
                         {{--<img src="{{asset('img/logo.png')}}" alt="logo" width="30px">--}}
                     </td>
                     <td> {{$team -> type}} </td>

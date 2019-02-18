@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Group;
+use App\Round;
 use App\Sport;
 use App\Team;
 use App\TeamGroup;
+use App\TimeTable;
 use App\Tournament;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -21,11 +23,28 @@ class GroupController extends Controller
         $this->middleware('auth');
     }
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function process(Request $request, $id){
+        #Status>>-1: Eliminado | 0: En proceso | 1: Finalizado
+        if(!$request->has('opc'))
+            abort(404);
+
+        $g = Group::find($id);
+        if(!$g)
+            abort(404);
+
+        switch ($request->get('opc')){
+            case 'end':
+                $g->status = 1;
+                break;
+            case 'active':
+                $g->status = 0;
+                break;
+        }
+        $g->save();
+        session()->flash('success', 'Estado actualizado con éxito');
+        return back();
+    }
+
     public function index()
     {
         return view('admin.groups.index');
@@ -46,53 +65,67 @@ class GroupController extends Controller
                abort(404);
 
             $sport = Sport::find($t->sports_id);
-            $group = Group::where('tournament_id', $t->id)->get();
+            $group = Group::where([
+                ['tournament_id', $t->id],
+                ['class', '<>', 'league']
+            ])->get();
 
-            $team = Team::leftJoin('team_groups', 'teams.id', 'team_groups.team_id')
-                ->select('teams.*', 'team_groups.group_id')
+
+            $selectTeam = Team::join('team_groups', 'team_groups.team_id', 'teams.id')
+                ->join('groups', 'groups.id', 'team_groups.group_id')
+                ->select('teams.*', 'team_groups.group_id', 'groups.class')
                 ->where([
-                    ['teams.sport_id', $t->sports_id],
-                    ['type', $t->type]
+                    ['teams.tournament_id', $t->id],
+                    ['groups.class', 'group']
                 ])->get();
 
-            if (($team->count())<=0){
-               session()->flash('info', 'Aún no hay equipos!');
+            $in_group = array();
+            foreach ($selectTeam as $tm){
+                $in_group[] = $tm->id;
             }
 
+            $team = Team::where([
+                ['tournament_id', $t->id],
+                ['status', '<>', -1],
+            ])->whereNotIn('id', $in_group)->get();
+
+
+            if (($team->count())<=0){
+                session()->flash('info', 'Aún no hay equipos!');
+            }
+
+
             return view('admin.groups.create', [
-               'tournaments' => $t,
-               'teams'=> $team,
-               'sport'=>$sport,
-               'groups'=> $group,
+                'tournaments' => $t,
+                'teams'=> $team,
+                'sport'=>$sport,
+                'groups'=> $group,
+                'selectTeams'=>$selectTeam,
+                'tournament_id'=> $request->query('tournament')
             ]);
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
+
         if (!$request->get("name"))
         {
             session()->flash('warning', 'Ingresa un nombre!');
             return redirect(route("group.create", ['tournament'=> $request->tournament_id]));
         }
 
-        if (($request->get("to_team")->count())<=1)
+        if (count($request->to_team)<=1)
         {
             session()->flash('warning', 'Necesitas escoger minimo 2 equipos para crear un grupo!');
             return redirect(route("group.create", ['tournament'=> $request->tournament_id]));
         }
 
-
         $g = new Group();
         $g->name = $request->name;
-        $g->status = 1;
+        $g->status = 0;
         $g->tournament_id = $request->tournament_id;
+        $g->class = 'group';
         $g->save();
 
 
@@ -103,52 +136,91 @@ class GroupController extends Controller
             $tg->save();
         }
 
+        $this->generate_dates($g);
+
         session()->flash('success', 'Guardado correctamente!');
         return redirect(route("group.create", ['tournament'=> $request->tournament_id]));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
-
 
     public function edit($id)
     {
 
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $g = Group::find($id);
         $tg = TeamGroup::where('group_id', $g->id);
+        $tt = TimeTable::where('group_id', $g->id)->get();
+
+        foreach ($tt as $t){
+            $r = Round::find($t->round_id);
+            if($r)
+                $r->delete();
+            $t->delete();
+        }
+
         $tg->delete();
         $g->delete();
+
         session()->flash("success", "Grupo Eliminado con exito");
         return back();
+    }
+
+    public function destroy_all($tournament_id){
+        $groups = Group::where([
+            ['tournament_id', $tournament_id],
+            ['class', 'group']
+        ])->delete();
+
+        session()->flash('success', 'Fase de grupos eliminada con éxito');
+        return back();
+
+    }
+
+    public function generate_dates($g){
+        $teams = Team::join('team_groups', 'team_groups.team_id', 'teams.id')
+            ->select('teams.*', 'team_groups.group_id')
+            ->where([
+                ['teams.tournament_id', $g->tournament_id],
+                ['team_groups.group_id', $g->id]
+            ])->get();
+
+        $vs = array();
+        foreach ($teams as $a){
+            foreach ($teams as $b){
+                if ($a != $b) {
+                    if (!$this->_is_in_vs($vs, $a, $b)) {
+
+                        $tt = new TimeTable();
+                        $tt->team_id_a = $a->id;
+                        $tt->team_id_b = $b->id;
+                        $tt->group_id = $g->id;
+                        $tt->save();
+
+                        $vs[] = [$a, $b];
+                    }
+                }
+            }
+        }
+    }
+
+    private function _is_in_vs($vs, $team_a, $team_b){
+        foreach ($vs as $v){
+            if (($v[0]==$team_a && $v[1]==$team_b) || ($v[0]==$team_b && $v[1]==$team_a)){
+                return true;
+            }
+        }
+        return false;
     }
 }

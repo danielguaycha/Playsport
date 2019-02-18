@@ -5,7 +5,7 @@
         @include('layouts.notify')
         <h3>Editar Torneo</h3>
         <hr>
-        <form action="{{route('tournament.update', ['id'=> $tournament->id])}}" method="post">
+        <form action="{{route('tournament.update', ['id'=> $tournament->id])}}" method="post" enctype="multipart/form-data">
             {{csrf_field()}}
             {{method_field("PUT")}}
             {{--Nombre--}}
@@ -46,19 +46,19 @@
             </div>
             {{--Genero y Deporte--}}
             <div class="form-group row">
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label>Género</label>
                     <select class="form-control" name="type" required>
                         @if(old('type')=='Male' || $tournament->type == 'Male')
-                            <option value="male" selected>Masculino</option>
-                            <option value="female">Femenino</option>
+                            <option value="Male" selected>Masculino</option>
+                            <option value="Female">Femenino</option>
                         @else
-                            <option value="male">Masculino</option>
-                            <option value="female" selected>Femenino</option>
+                            <option value="Male">Masculino</option>
+                            <option value="Female" selected>Femenino</option>
                         @endif
                     </select>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-4">
                     <label>Deporte</label>
                     <select class="form-control" name="sport_id" required>
                         @foreach($sports as $sport)
@@ -70,11 +70,33 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="">Prioridad</label>
+                        <input type="number" class="form-control" name="priority" id="priority" aria-describedby="helpId"
+                               placeholder="Ingrese el número de prioridad" value="{{ $tournament->priority }}" max="100" min="-10" required>
+                        <small id="helpId" class="form-text text-muted">Permite mostrar este torneo como principal en la página de inicio para los usuarios</small>
+                    </div>
+                </div>
+            </div>
+            {{--Logo--}}
+            <div class="form-group row">
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                    <img src="{{ asset($tournament->logo) }}" class="mr-2">
+                    <label>Cambiar?</label>
+                    <input type="checkbox" name="change" id="change">
+                </div>
+                <div class="col-md-8">
+                    <label for="">Logo</label>
+                    <input type="file" class="form-control-file" disabled="disabled" name="logo" placeholder="Escoja un logo"
+                           aria-describedby="fileHelpId" id="logo">
+                    <small id="fileHelpId" class="form-text text-muted">Tamaño 100x100 pixeles</small>
+                </div>
             </div>
             {{--Reglas--}}
             <div class="form-group">
                 <div class="form-group">
-                    <label>Reglas (.md)</label>
+                    <label>Descripción </label>
                     <textarea class="form-control" name="rules" rows="3">{{$tournament->rules}}</textarea>
                 </div>
             </div>
@@ -87,4 +109,19 @@
 
         </form>
     </div>
+@endsection
+
+
+@section('script')
+    <script>
+        $('#change').click(function(){
+            if (document.getElementById('change').checked)
+            {
+                $('#logo').prop("disabled", false);
+            }else{
+                $('#logo').prop("disabled", true);
+            }
+        });
+
+    </script>
 @endsection

@@ -6778,8 +6778,8 @@ if (token) {
         case boolTag:
         case dateTag:
         case numberTag:
-          // Coerce booleans to `1` or `0` and dates to milliseconds.
-          // Invalid dates are coerced to `NaN`.
+          // Coerce booleans to `1` or `0` and league to milliseconds.
+          // Invalid league are coerced to `NaN`.
           return eq(+object, +other);
 
         case errorTag:

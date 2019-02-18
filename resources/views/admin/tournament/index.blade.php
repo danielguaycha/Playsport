@@ -32,7 +32,7 @@
                         <td>{{$t->date_init}}</td>
                         <td>{{$t->date_end}}</td>
                         <td>{{$t->type}}</td>
-                        @if($t->status == 1)
+                        @if($t->status == 0)
                             <td class="font-weight-bold border-success text-success">Activo</td>
                         @else
                             <td class="border-danger text-danger">Terminado</td>
@@ -43,9 +43,12 @@
                             <a href="{{route("tournament.edit", ['id'=> $t->id])}}" class="btn btn-sm btn-info">
                                 <i class="fa fa-edit"></i>
                             </a>
-                            <a href="#" class="btn btn-sm btn-danger">
-                                <i class="fa fa-trash"></i>
-                            </a>
+                            <form id="delete_tournament" action="{{ route('tournament.destroy', ['id'=> $t->id ]) }}" method="post" class="form-confirm d-inline-block">
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                                <button class="btn btn-sm btn-danger" ><i class="fa fa-trash"></i> </button>
+                            </form>
+                            <a href="{{ route('tournament.show', ['id'=> $t->id ]) }}" class="btn btn-success btn-sm"><i class="fa fa-cogs "></i></a>
                         </td>
                     </tr>
                 @endforeach

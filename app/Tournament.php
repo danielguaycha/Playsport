@@ -16,6 +16,7 @@ class Tournament extends Model
         'status',
         'rules',
         'sports_id',
+        'priority',
         'organizations_id'
     ];
 

@@ -3,24 +3,27 @@
 @section('content')
     <div class="container" id="grupos">
         @include('layouts.notify')
-        <div class="sp-title">
+        <div class="sp-title mb-3">
             <h3>Crear Grupos</h3>
+            @if(request()->get('tournament'))
+                @include('admin.tournament._back', ['tournament_id'=>$tournament_id ])
+            @endif
         </div>
 
         @if(!request()->get('tournament'))
             <form method="get">
-            <div class="form-group">
-                <label for="">Torneo al que pertenece el grupo</label>
-                <select class="form-control" name="tournament" id="" v-model="tournaments">
-                    @foreach($tournaments as $t)
-                        <option value="{{ $t->id }}">{{ $t->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div class="form-group">
+                <div class="form-group">
+                    <label for="">Torneo al que pertenece el grupo</label>
+                    <select class="form-control" name="tournament" id="" v-model="tournaments">
+                        @foreach($tournaments as $t)
+                            <option value="{{ $t->id }}">{{ $t->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group">
                 <input type="submit" value="Seleccionar" class="btn btn-success">
             </div>
-        </form>
+            </form>
         @else
 
             {{--Informacion del torneo que se selecciono--}}
@@ -44,11 +47,8 @@
                             <label for="">Seleccione equipos</label>
                             <select multiple class="custom-select" v-model="from_team" name="from_team" id="from_team">
                                 @foreach($teams as $tm)
-                                    @if($tm->group_id!=null)
-                                        <option class="disabled text-danger" disabled value="{{$tm->id}}">{{$tm->name}}</option>
-                                    @else
-                                        <option value="{{$tm->id}}">{{$tm->name}}</option>
-                                    @endif
+
+                                    <option value="{{$tm->id}}">{{$tm->name}}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -85,6 +85,7 @@
                 </div>
             </form>
 
+
             {{--Lista de grupos para este torneo--}}
             <hr>
             <div class="sp-title">
@@ -101,14 +102,16 @@
                     <tr class="text-center" style="border-bottom: 2px solid #dc3545">
                         <td colspan="2">
                             Grupo: <b>{{ $g->name }}</b>  |
-                            <form @submit.prevent="deleteGroup('g_{{$g->id}}')"
-                                  action="{{route("group.destroy", ['id'=> $g->id])}}"
-                                  class="d-inline-block" id="g_{{$g->id}}">
-                                <button type="submit" class="btn btn-link text-danger"><i class="fa fa-trash"></i></button>
+                            <form action="{{route("group.destroy", ['id'=> $g->id])}}"
+                                  class="d-inline-block form-confirm" id="g_{{$g->id}}" method="post">
+                                {{ csrf_field() }}
+                                {{ method_field('DELETE') }}
+                                <button type="submit" class="btn btn-link text-danger">
+                                    <i class="fa fa-trash"></i></button>
                             </form>
                         </td>
                     </tr>
-                    @foreach($teams as $t)
+                    @foreach($selectTeams as $t)
                         <tr>
                         @if($t->group_id == $g->id)
                             <td>
@@ -133,12 +136,8 @@
 
 @section('script')
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
-{{--
-    <script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
---}}
 
     <script>
-
         const vue = new Vue({
             el: '#grupos',
             data() {

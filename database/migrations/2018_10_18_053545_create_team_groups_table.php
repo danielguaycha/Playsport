@@ -27,8 +27,8 @@ class CreateTeamGroupsTable extends Migration
             $table->integer("team_id")->unsigned();
 
             $table->timestamps();
-            $table->foreign("team_id")->references("id")->on("teams");
-            $table->foreign("group_id")->references("id")->on("groups");
+            $table->foreign("team_id")->references("id")->on("teams")->onDelete('cascade');
+            $table->foreign("group_id")->references("id")->on("groups")->onDelete('cascade');
         });
     }
 

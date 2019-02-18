@@ -29,18 +29,9 @@
                     <div class="row">
                         <div class="col">
                             <h6>Equipo A | {{ $s->team_a }}</h6>
-                            @if($s->type_a == 'Male')
-                                <img src="{{ Avatar::create($s->alias_a)
-                                                ->setDimension(200)
-                                                ->setFontSize(72)
-                                                ->setBackground($s->logo_a)->toBase64() }}" width="60px"/>
-                            @else
-                                <img src="{{ Avatar::create($s->alias_a)
-                                                    ->setBorder(5, "#C2185B")
-                                                    ->setDimension(200)
-                                                    ->setFontSize(72)
-                                                    ->setBackground($s->logo_a)->toBase64() }}" width="60px"/>
-                            @endif
+
+                            <img src="{{ asset($s->logo_a) }}" width="60px"/>
+
                             <form class="form-inline py-3 text-center justify-content-center"
                                   action="{{ route("stage.change") }}">
                                 {{ csrf_field() }}
@@ -49,8 +40,8 @@
                                 <input type="hidden" name="time_table_id" value="{{ $s->id }}">
                                 <div class="form-group">
                                     <select name="team_new" id="team_a" class="form-control">
-                                        @foreach($stats as $st)
-                                            <option value="{{ $st->team_id }}">{{ $st->team }}</option>
+                                        @foreach($teams as $st)
+                                            <option value="{{ $st->id }}">{{ $st->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -70,18 +61,7 @@
                     <div class="row">
                         <div class="col">
                             <h6>Equipo B | {{ $s->team_b }}</h6>
-                            @if($s->type_b == 'Male')
-                                <img src="{{ Avatar::create($s->alias_b)
-                                                ->setDimension(200)
-                                                ->setFontSize(72)
-                                                ->setBackground($s->logo_b)->toBase64() }}" width="60px"/>
-                            @else
-                                <img src="{{ Avatar::create($s->alias_b)
-                                                    ->setBorder(5, "#C2185B")
-                                                    ->setDimension(200)
-                                                    ->setFontSize(72)
-                                                    ->setBackground($s->logo_b)->toBase64() }}" width="60px"/>
-                            @endif
+                            <img src="{{ asset($s->logo_b) }}" width="60px"/>
                             <form class="form-inline py-3 text-center justify-content-center"
                                   action="{{ route("stage.change") }}">
                                 {{ csrf_field() }}
@@ -90,8 +70,8 @@
                                 <input type="hidden" name="time_table_id" value="{{ $s->id }}">
                                 <div class="form-group">
                                     <select name="team_new" id="team_b" class="form-control">
-                                        @foreach($stats as $st)
-                                            <option value="{{ $st->team_id }}">{{ $st->team }}</option>
+                                        @foreach($teams as $st)
+                                            <option value="{{ $st->id }}">{{ $st->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>

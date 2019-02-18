@@ -16,18 +16,8 @@
                 <div class="row">
                     <div class="col">
                         <h6>Equipo A | {{ $table->team_a }}</h6>
-                        @if($table->type_a == 'Male')
-                            <img src="{{ Avatar::create($table->alias_a)
-                                            ->setDimension(200)
-                                            ->setFontSize(72)
-                                            ->setBackground($table->logo_a)->toBase64() }}" width="60px"/>
-                        @else
-                            <img src="{{ Avatar::create($table->alias_a)
-                                                ->setBorder(5, "#C2185B")
-                                                ->setDimension(200)
-                                                ->setFontSize(72)
-                                                ->setBackground($table->logo_a)->toBase64() }}" width="60px"/>
-                        @endif
+
+                            <img src="{{ asset($table->logo_a) }}" width="60px"/>
                     </div>
                 </div>
             </div>
@@ -38,18 +28,7 @@
                     <div class="col">
 
                         <h6>Equipo B | {{ $table->team_b }}</h6>
-                        @if($table->type_b == 'Male')
-                            <img src="{{ Avatar::create($table->alias_b)
-                                            ->setDimension(200)
-                                            ->setFontSize(72)
-                                            ->setBackground($table->logo_b)->toBase64() }}" width="60px"/>
-                        @else
-                            <img src="{{ Avatar::create($table->alias_b)
-                                                ->setBorder(5, "#C2185B")
-                                                ->setDimension(200)
-                                                ->setFontSize(72)
-                                                ->setBackground($table->logo_b)->toBase64() }}" width="60px"/>
-                        @endif
+                        <img src="{{ asset($table->logo_b) }}" width="60px"/>
                     </div>
                 </div>
 

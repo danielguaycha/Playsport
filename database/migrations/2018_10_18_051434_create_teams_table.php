@@ -18,12 +18,13 @@ class CreateTeamsTable extends Migration
             $table->string("name", 100);
             $table->string("alias", 50)->nullable();
             $table->enum("type", ["Male", "Female"]);
-            $table->string("logo", 100);
-            $table->integer("organization_id")->unsigned();
+            $table->string("logo", 100)->nullable();
+            $table->string("color", 20)->nullable();
             $table->integer("sport_id")->unsigned();
             $table->integer('status')->default(0);
-            $table->foreign('organization_id')->references('id')->on('organizations');
             $table->foreign('sport_id')->references('id')->on('sports');
+            $table->integer("tournament_id")->unsigned()->nullable();
+            $table->foreign("tournament_id")->references("id")->on("tournaments");
 
             $table->timestamps();
         });

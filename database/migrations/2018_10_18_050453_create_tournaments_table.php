@@ -20,9 +20,12 @@ class CreateTournamentsTable extends Migration
             $table->date("date_end");
             $table->enum("type", ["Male", "Female"]);
             $table->string("logo", 100);
+            $table->string("portada", 100)->nullable();
             $table->string("url", 100)->nullable();
-            $table->integer("status")->default(1);
-            $table->longText("rules");
+            $table->integer('priority')->default(5);
+            #Status>>-1: Eliminado | 0: En proceso | 1: Finalizado
+            $table->integer("status")->default(0);
+            $table->longText("rules")->nullable();
 
             $table->integer("sports_id")->unsigned();
             $table->integer("organizations_id")->unsigned();
